@@ -4,7 +4,7 @@
  */
 package modelo;
 
-/**
+/** 
  *
  * @author vicen
  */
@@ -43,11 +43,11 @@ public class Empresario {
         this.moralidad = moralidad;
     }
     
-    public Patrocinio elegirPatrocinio(Patrocinio patrocinio){
+    public void elegirPatrocinio(){
         
     }
     
-    public Futbolista ficharJugador(Futbolista futbolista){
+    public void ficharJugador(){
         
     }
     
