@@ -15,7 +15,7 @@ public class Club {
     private String nombre;
     private int PartidosGanados;
     private int aficion;
-    private int raking;
+    private int ranking;
     private String dificultad;
     private int camisetasVendidas;
     private int entradasVendidas;
