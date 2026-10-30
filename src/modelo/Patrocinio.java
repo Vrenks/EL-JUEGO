@@ -9,5 +9,9 @@ package modelo;
  * @author vicen
  */
 public class Patrocinio {
-    
+    private String nombre;
+    private int moralidad;
+    private double inversion;
+
+
 }
