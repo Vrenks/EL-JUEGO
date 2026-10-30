@@ -44,7 +44,7 @@ public class Empresario {
     }
     
     public void elegirPatrocinio(){
-        //pene
+        
     }
     
     public void ficharJugador(){
