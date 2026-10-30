@@ -9,5 +9,17 @@ package modelo;
  * @author vicen
  */
 public class Club {
+
+    private String nombre;
+    private int PartidosGanados;
+    private int aficion;
+    private int raking;
+    private String dificultad;
+    private int camisetasVendidas;
+    private int entradasVendidas;
+    private int CantidadPatrocinadores;
+
+    
+
     
 }
