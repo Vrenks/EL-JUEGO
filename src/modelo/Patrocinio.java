@@ -42,6 +42,16 @@ public class Patrocinio {
     public void setInversion(double inversion) {
         this.inversion = inversion;
     }
+
+    public void empezarPatrocinio() {
+        // Lógica para empezar el patrocinio
+    }
+
+    public void terminarPatrocinio() {
+        // Lógica para terminar el patrocinio
+    }
+
+
     
     
 
