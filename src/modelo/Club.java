@@ -107,9 +107,20 @@ public class Club {
     }
 
 
+
+
+
+    //Funciones
+
     public void ficharJugador(Futbolista jugador) {
         jugadores.add(jugador);
     }
+
+    public void despedirJugador(Futbolista jugador) {
+        jugadores.remove(jugador);
+    }
+
+    
 
 
 
