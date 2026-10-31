@@ -6,6 +6,7 @@ package vista;
 
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /**
  *
@@ -36,6 +37,10 @@ public class PanelEditarJugador extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaEditar = new javax.swing.JTable();
         BtnEditar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        TxtDorsal = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        TxtPosicion = new javax.swing.JTextField();
 
         BtnEditarJugadorAModificacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnEditarJugadorAModificacion.setText("Volver");
@@ -87,7 +92,7 @@ public class PanelEditarJugador extends javax.swing.JPanel {
                 java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -103,6 +108,16 @@ public class PanelEditarJugador extends javax.swing.JPanel {
         jScrollPane1.setViewportView(TablaEditar);
 
         BtnEditar.setText("Editar");
+        BtnEditar.addActionListener(this::BtnEditarActionPerformed);
+
+        jLabel2.setText("Nuevo dorsal: ");
+
+        TxtDorsal.setText("jTextField1");
+        TxtDorsal.addActionListener(this::TxtDorsalActionPerformed);
+
+        jLabel3.setText("Nueva posicion: ");
+
+        TxtPosicion.setText("jTextField2");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -114,16 +129,33 @@ public class PanelEditarJugador extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(161, 161, 161)
-                        .addComponent(BtnEditar)))
-                .addContainerGap(7, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TxtDorsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGap(161, 161, 161)
+                                .addComponent(BtnEditar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtPosicion, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(TxtDorsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(TxtPosicion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addComponent(BtnEditar)
                 .addContainerGap())
         );
@@ -150,6 +182,14 @@ public class PanelEditarJugador extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnEditarActionPerformed
+
+    private void TxtDorsalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtDorsalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtDorsalActionPerformed
+
     public JButton getBtnEditarJugadorAModificacion() {
         return BtnEditarJugadorAModificacion;
     }
@@ -173,6 +213,22 @@ public class PanelEditarJugador extends javax.swing.JPanel {
     public void setTablaEditar(JTable TablaEditar) {
         this.TablaEditar = TablaEditar;
     }
+
+    public JTextField getTxtDorsal() {
+        return TxtDorsal;
+    }
+
+    public void setTxtDorsal(JTextField TxtDorsal) {
+        this.TxtDorsal = TxtDorsal;
+    }
+
+    public JTextField getTxtPosicion() {
+        return TxtPosicion;
+    }
+
+    public void setTxtPosicion(JTextField TxtPosicion) {
+        this.TxtPosicion = TxtPosicion;
+    }
     
     
     
@@ -181,7 +237,11 @@ public class PanelEditarJugador extends javax.swing.JPanel {
     private javax.swing.JButton BtnEditar;
     private javax.swing.JButton BtnEditarJugadorAModificacion;
     private javax.swing.JTable TablaEditar;
+    private javax.swing.JTextField TxtDorsal;
+    private javax.swing.JTextField TxtPosicion;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
