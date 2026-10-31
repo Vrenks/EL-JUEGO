@@ -215,6 +215,10 @@ public class PanelFichaje extends javax.swing.JPanel {
     public void setListaFichajes(JTable ListaFichajes) {
         this.ListaFichajes = ListaFichajes;
     }
+
+    public int getFilaSeleccionada(){
+        return ListaFichajes.getSelectedRow();
+    }
     
     
 

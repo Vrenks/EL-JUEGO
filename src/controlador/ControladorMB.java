@@ -52,9 +52,9 @@ public class ControladorMB {
         
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar());
-        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->ficharJugador());
+        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->ficharJugador(fichajes));
         vista.getPanelModificacionJugadores().getBtnModificacionACambiarJugador().addActionListener(e->cambiar());
-        vista.getPanelFichaje().getBtnFichar().addActionListener(e->ficharJugador());
+        vista.getPanelFichaje().getBtnFichar().addActionListener(e->ficharJugador(fichajes));
         vista.getPanelCambiarJugador().getBtnCambiar().addActionListener(e->despedirJugador());
         
         vista.getPanelOpciones().getBtnOpcionesAGestion().addActionListener(e->gestionar());
@@ -196,6 +196,7 @@ public class ControladorMB {
                     club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
                     emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
                     vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+                    patrocinios.borrarPatrocinio(patrocinio);
                 }
             }
         }
@@ -249,28 +250,30 @@ public class ControladorMB {
             p1 = patrocinios.getPatrocinios().get(numAleatorio1);
             tabla = (DefaultTableModel) vista.getPanelPatrocinios().getTablaPatrocinadores().getModel();
             tabla.setRowCount(0);
-            tabla.addRow(new Object[]{p1.getNombre(), p1.getMoralidad(), p1.getInversion()});
+            tabla.addRow(new Object[]{p1.getNombre(), p1.getInversion(), p1.getMoralidad()});
         }else {
             p1 = patrocinios.getPatrocinios().get(numAleatorio1);
             p2 = patrocinios.getPatrocinios().get(numAleatorio2);
             tabla = (DefaultTableModel) vista.getPanelPatrocinios().getTablaPatrocinadores().getModel();
             tabla.setRowCount(0);
-            tabla.addRow(new Object[]{p1.getNombre(), p1.getMoralidad(), p1.getInversion()});
-            tabla.addRow(new Object[]{p2.getNombre(), p2.getMoralidad(), p2.getInversion()});
+            tabla.addRow(new Object[]{p1.getNombre(), p1.getInversion(), p1.getMoralidad()});
+            tabla.addRow(new Object[]{p2.getNombre(), p2.getInversion(), p2.getMoralidad()});
         }
+        vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->{
+            int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
+            if (fila!=-1){
+                String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
+                Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
+                patrocinio.setAsociado(true);
+                int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
+                int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
+                emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
+                emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
+                club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
+                vista.mostrarPantalla("SIMULACION");
+            }  
+        });
         vista.mostrarPantalla("PATROCINIOS");
-        int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
-        if (fila!=-1){
-            String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
-            Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
-            patrocinio.setAsociado(true);
-            int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
-            int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
-            emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
-            emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
-            club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
-        }
-        vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->vista.mostrarPantalla("SIMULACION"));
     }
     
     public void modificar(){
@@ -288,19 +291,23 @@ public class ControladorMB {
 
     }
 
-    private void ficharJugador(){
+    private void ficharJugador(ListaFichajes fichajes){
         vista.mostrarPantalla("FICHAJE");
-        javax.swing.JTable tabla = vista.getPanelFichaje().getListaFichajes();
-        int fila = tabla.getSelectedRow();
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
+        tabla.setRowCount(0);
+        for (Futbolista futbolista : fichajes.getFutbolistas()) {
+            Object[] fila = {futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), 
+                             futbolista.getRendimiento(), futbolista.getSueldo()};
+            tabla.addRow(fila);
+        }
+        int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador disponible para fichar.", "Fichaje");
             return;
         }
-
-        int filaModelo = tabla.convertRowIndexToModel(fila);
         Object[] datos = new Object[tabla.getColumnCount()];
         for (int columna = 0; columna < datos.length; columna++){
-            datos[columna] = tabla.getModel().getValueAt(filaModelo, columna);
+            datos[columna] = tabla.getValueAt(fila, columna);
             if (datos[columna] == null){
                 vista.mostrarError("Los datos del jugador seleccionado están incompletos.", "Error de fichaje");
                 return;
@@ -320,7 +327,7 @@ public class ControladorMB {
         }
 
         club.agregarJugador(jugador);
-        ((DefaultTableModel) tabla.getModel()).removeRow(filaModelo);
+        tabla.removeRow(fila);
         ListarJugadores(club);
     }
 
