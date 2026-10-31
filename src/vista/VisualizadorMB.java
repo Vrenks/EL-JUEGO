@@ -52,7 +52,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
         contenedor.add(panelInicio, "INICIO");
         contenedor.add(panelCreacion, "CREACION");
         contenedor.add(panelGestion, "GESTION");
-        contenedor.add(panelInformacion, "INFOMACION");
+        contenedor.add(panelInformacion, "INFORMACION");
         contenedor.add(panelSimulacion, "SIMULACION");
         contenedor.add(panelModificacionJugadores, "MODIFICAR JUGADORES");
         contenedor.add(panelOpciones, "OPCIONES");

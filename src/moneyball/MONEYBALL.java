@@ -5,6 +5,7 @@
 package moneyball;
 
 import controlador.ControladorMB;
+import modelo.Club;
 import modelo.Empresario;
 import vista.VisualizadorMB;
 
@@ -21,8 +22,14 @@ public class MONEYBALL {
         
         VisualizadorMB vista = new VisualizadorMB(); 
         Empresario emp = new Empresario("", 0, 0);
+        Club club = new Club("", 45, 0, "", 0, 0, 0);
+        ControladorMB c = new ControladorMB(vista, emp, club);
+        
+
+
+
         java.awt.EventQueue.invokeLater(() -> vista.setVisible(true));
-        ControladorMB c = new ControladorMB(vista, emp);
+        
         
     }
     

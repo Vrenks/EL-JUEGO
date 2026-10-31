@@ -122,15 +122,6 @@ public class Club {
         jugadores.add(jugador);
     }
 
-
-
-
-    //Funciones
-
-    public void ficharJugador(Futbolista jugador) {
-        jugadores.add(jugador);
-    }
-
     public void despedirJugador(Futbolista jugador) {
         jugadores.remove(jugador);
     }

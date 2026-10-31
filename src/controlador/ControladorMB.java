@@ -5,10 +5,15 @@
 package controlador;
 
 
+import javax.swing.table.DefaultTableModel;
+
 import modelo.Club;
 import modelo.Empresario;
 import modelo.Futbolista;
+import modelo.Patrocinio;
 import vista.VisualizadorMB;
+import modelo.ListaPatrocinios;
+import modelo.ListaClubes;
 
 /**
  *
@@ -18,20 +23,24 @@ public class ControladorMB {
     
     private VisualizadorMB vista;
     private Empresario emp; 
+    private Club club;
     
     
-    public ControladorMB(VisualizadorMB vista, Empresario emp) {
+    public ControladorMB(VisualizadorMB vista, Empresario emp, Club club) {
         this.vista=vista;
         this.emp=emp;
+        this.club=club;
+        
 
         
-        vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp));
+        
+        vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp, club));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->gestionar());
         
         vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular());
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar());
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
-        vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion());
+        vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club));
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar());
         vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular());
@@ -60,7 +69,7 @@ public class ControladorMB {
         
     }
     
-    public void crear(Empresario emp){
+    public void crear(Empresario emp, Club club){
         vista.mostrarPantalla("CREACION");
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
         String dificultad = vista.getPanelCreacion().getBtnElegirDificultad().getSelectedItem().toString();
@@ -74,9 +83,13 @@ public class ControladorMB {
         else{
             nombreClub="Colo-Colo";
         }
-        Club c = new Club(nombreClub, 0, 0, dificultad, 0, 0, 0);
-        clubBase(c, nombreClub);
+        club.setNombre(nombreClub);
+        club.setDificultad(nombreClub);
+        clubBase(club, nombreClub);
 
+        ListaPatrocinios patrocinios = new ListaPatrocinios();
+        ListaClubes clubes = new ListaClubes();
+        crearClubesYPatrocinios(clubes, dificultad, patrocinios);
     }
 
     public void clubBase(Club club, String nombreClub){
@@ -134,16 +147,20 @@ public class ControladorMB {
         club.agregarJugador(f7);
         club.agregarJugador(f8);
         club.agregarJugador(f9);
-        
-        club.setRendimiento(45);
+
     }
     
     public void gestionar(){
         vista.mostrarPantalla("GESTION");
     }
     
-    public void informacion(){
+    public void informacion(Club club){
         vista.mostrarPantalla("INFORMACION");
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelInformacion().getTablaInformacion().getModel();
+        tabla.setNumRows(0);
+        for(Futbolista futbolista: club.getJugadores()){
+            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
+        }
     }
     
     public void simular(){
@@ -174,5 +191,88 @@ public class ControladorMB {
         vista.mostrarPantalla("CAMBIAR JUGADOR");
     }
     
+    public void crearClubesYPatrocinios(ListaClubes clubes, String nombreClub, ListaPatrocinios patrocinios){
+        Club c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15;
+        if (nombreClub.equals("Liverpool")){
+            c1= new Club("Arsenal", 62, 0, "", 0, 0, 0); 
+            c2= new Club("Manchester City", 60, 0, "", 0, 0, 0); 
+            c3= new Club("Aston Villa", 58, 0, "", 0, 0, 0); 
+            c4= new Club("Chelsea", 57, 0, "", 0, 0, 0);
+            c5= new Club("Newcastle United", 56, 0, "", 0, 0, 0);
+            c6= new Club("Tottenham", 54, 0, "", 0, 0, 0);
+            c7= new Club("Manchester United", 53, 0, "", 0, 0, 0); 
+            c8= new Club("Crystal Palace", 52, 0, "", 0, 0, 0); 
+            c9= new Club("Everton", 52, 0, "", 0, 0, 0); 
+            c10= new Club("Brighton", 51, 0, "", 0, 0, 0);
+            c11= new Club("Fulham", 50, 0, "", 0, 0, 0); 
+            c12= new Club("Nottingham Forest", 48, 0, "", 0, 0, 0); 
+            c13= new Club("Coventry City", 47, 0, "", 0, 0, 0); 
+            c14= new Club("Bournemouth", 47, 0, "", 0, 0, 0);  
+            c15= new Club("Sunderland AFC", 45, 0, "", 0, 0, 0);
+        }else if(nombreClub.equals("Inter")){
+            c1= new Club("Lazio", 62, 0, "", 0, 0, 0); 
+            c2= new Club("Juventus", 60, 0, "", 0, 0, 0); 
+            c3= new Club("Milan", 58, 0, "", 0, 0, 0); 
+            c4= new Club("Roma", 57, 0, "", 0, 0, 0);
+            c5= new Club("Como 1907", 56, 0, "", 0, 0, 0);
+            c6= new Club("Napoli", 56, 0, "", 0, 0, 0);
+            c7= new Club("Torino", 55, 0, "", 0, 0, 0); 
+            c8= new Club("Bolonia", 55, 0, "", 0, 0, 0); 
+            c9= new Club("Lecce", 52, 0, "", 0, 0, 0); 
+            c10= new Club("Atalanta", 51, 0, "", 0, 0, 0);
+            c11= new Club("Genoa", 50, 0, "", 0, 0, 0); 
+            c12= new Club("Cagliari", 50, 0, "", 0, 0, 0); 
+            c13= new Club("Venezia", 49, 0, "", 0, 0, 0); 
+            c14= new Club("Udinese", 49, 0, "", 0, 0, 0);  
+            c15= new Club("Fiorentina", 46, 0, "", 0, 0, 0);
+        }else{
+            c1= new Club("U. de Chile", 64, 0, "", 0, 0, 0); 
+            c2= new Club("U. Catolica", 63, 0, "", 0, 0, 0); 
+            c3= new Club("Everton", 63, 0, "", 0, 0, 0); 
+            c4= new Club("Palestino", 61, 0, "", 0, 0, 0);
+            c5= new Club("Deportes Limache", 60, 0, "", 0, 0, 0);
+            c6= new Club("Coquimbo Unido", 60, 0, "", 0, 0, 0);
+            c7= new Club("Huachipato", 59, 0, "", 0, 0, 0); 
+            c8= new Club("La Serena", 57, 0, "", 0, 0, 0); 
+            c9= new Club("Deportes Concepcion", 57, 0, "", 0, 0, 0); 
+            c10= new Club("Audax Italiano", 56, 0, "", 0, 0, 0);
+            c11= new Club("O.Higgins", 55, 0, "", 0, 0, 0); 
+            c12= new Club("Cobresal", 54, 0, "", 0, 0, 0); 
+            c13= new Club("U. de Conce", 54, 0, "", 0, 0, 0); 
+            c14= new Club("Union La Calera", 53, 0, "", 0, 0, 0);  
+            c15= new Club("Ñublense", 51, 0, "", 0, 0, 0);
+        }
+
+        clubes.agregarClub(c1);
+        clubes.agregarClub(c2);
+        clubes.agregarClub(c3);
+        clubes.agregarClub(c4);
+        clubes.agregarClub(c5);
+        clubes.agregarClub(c6);
+        clubes.agregarClub(c7);
+        clubes.agregarClub(c8);
+        clubes.agregarClub(c9);
+        clubes.agregarClub(c10);
+        clubes.agregarClub(c11);
+        clubes.agregarClub(c12);
+        clubes.agregarClub(c13);
+        clubes.agregarClub(c14);
+        clubes.agregarClub(c15);
+
+        Patrocinio p1 = new Patrocinio("Apple", 3, 270000);
+        Patrocinio p2 = new Patrocinio("UNICEF", 5, 80000);
+        Patrocinio p3 = new Patrocinio("LATAM", 4, 150000);
+        Patrocinio p4 = new Patrocinio("OpenAI", 2, 120000);
+        Patrocinio p5 = new Patrocinio("Betano", 1, 200000);
+        Patrocinio p6 = new Patrocinio("Tel Aviv Inver-sionistas", 0, 400000);
+        
+        patrocinios.agregarPatrocinio(p1);
+        patrocinios.agregarPatrocinio(p2);
+        patrocinios.agregarPatrocinio(p3);
+        patrocinios.agregarPatrocinio(p4);
+        patrocinios.agregarPatrocinio(p5);
+        patrocinios.agregarPatrocinio(p6);
+        
+    }
     
 }
