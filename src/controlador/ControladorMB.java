@@ -208,6 +208,7 @@ public class ControladorMB {
             if (patrocinio.getPartidosRestantes()==0){
                 club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
                 emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
+                JOptionPane.showMessageDialog(vista, "El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE", 1);
             }
         }
     }
@@ -236,6 +237,14 @@ public class ControladorMB {
     
     public void modificar(){
         vista.mostrarPantalla("MODIFICAR JUGADORES");
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEditarJugador().getTablaEditar().getModel();
+        tabla.setRowCount(0);
+        for(Futbolista futbolista: club.getJugadores()){
+            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
+        }
+        
+
+
     }
     
     public void opciones(){
