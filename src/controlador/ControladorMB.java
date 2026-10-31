@@ -250,8 +250,6 @@ public class ControladorMB {
     
     public void modificar(){
         vista.mostrarPantalla("MODIFICAR JUGADORES");
-        
-
     }
     
     public void opciones(){
@@ -260,12 +258,13 @@ public class ControladorMB {
     
     public void fichar(){
         vista.mostrarPantalla("FICHAJE");
+        
     }
     
     public void editar(Club club){
         vista.mostrarPantalla("EDITAR");
         listar(club, vista.getPanelEditarJugador().getTablaEditar());
-        
+
     }
         
     
