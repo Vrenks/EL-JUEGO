@@ -186,14 +186,19 @@ public class ControladorMB {
             resultado = "Empate: 0-0";
         }
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
-        tabla.addRow(new Object[]{club.getPartidosJugados(), rival.getNombre(), resultado});
+        tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), resultado});
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
         for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
             if (patrocinio.isAsociado())
                 patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
+            if (patrocinio.getPartidosRestantes()<=0){
+                club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
+                emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
+                vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+            }
         }
-        if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%2==0){
+        if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%3==0){
             int eleccion = vista.eleccion("Dos patrocinadores interesados. Presione YES para revisarlos o NO para seguir en la simulacion.", "INFORMACION PATROCINIOS");
             if (eleccion!=0)
                 return;
@@ -207,13 +212,7 @@ public class ControladorMB {
             }
             vista.mostrarInformacion("Sueldos cobrados: $"+sueldos, "INFORMACION IMPORTANTE");
         }
-        for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
-            if (patrocinio.getPartidosRestantes()==0){
-                club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
-                emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
-                vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
-            }
-        } 
+        
 
     }
 
@@ -233,26 +232,42 @@ public class ControladorMB {
     
     public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club){
         Random rand = new Random();
-        int numAleatorio1 = rand.nextInt(6);
-        int numAleatorio2 = rand.nextInt(6);
-        Patrocinio p1 = patrocinios.getPatrocinios().get(numAleatorio1);
-        Patrocinio p2 = patrocinios.getPatrocinios().get(numAleatorio2);
-        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelPatrocinios().getTablaPatrocinadores().getModel();
-        tabla.setRowCount(0);
-        tabla.addRow(new Object[]{p1.getNombre(), p1.getMoralidad(), p1.getInversion()});
-        tabla.addRow(new Object[]{p2.getNombre(), p2.getMoralidad(), p2.getInversion()});
+        int numAleatorio1 = 0;
+        int numAleatorio2 = 0;
+        boolean condicion = true;
+        while (condicion){
+            numAleatorio1 = rand.nextInt(patrocinios.getPatrocinios().size());
+            numAleatorio2 = rand.nextInt(patrocinios.getPatrocinios().size());
+            if (!patrocinios.getPatrocinios().get(numAleatorio1).isAsociado()||!patrocinios.getPatrocinios().get(numAleatorio2).isAsociado())
+                break;
+        }
+        Patrocinio p1;
+        Patrocinio p2;
+        DefaultTableModel tabla;
+        if (numAleatorio1==numAleatorio2){
+            p1 = patrocinios.getPatrocinios().get(numAleatorio1);
+            tabla = (DefaultTableModel) vista.getPanelPatrocinios().getTablaPatrocinadores().getModel();
+            tabla.setRowCount(0);
+            tabla.addRow(new Object[]{p1.getNombre(), p1.getMoralidad(), p1.getInversion()});
+        }else {
+            p1 = patrocinios.getPatrocinios().get(numAleatorio1);
+            p2 = patrocinios.getPatrocinios().get(numAleatorio2);
+            tabla = (DefaultTableModel) vista.getPanelPatrocinios().getTablaPatrocinadores().getModel();
+            tabla.setRowCount(0);
+            tabla.addRow(new Object[]{p1.getNombre(), p1.getMoralidad(), p1.getInversion()});
+            tabla.addRow(new Object[]{p2.getNombre(), p2.getMoralidad(), p2.getInversion()});
+        }
         vista.mostrarPantalla("PATROCINIOS");
         int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
         if (fila!=-1){
             String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
             Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
+            patrocinio.setAsociado(true);
             int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
             int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
             emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
             emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
             club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
-            patrocinio.setAsociado(true);
-            patrocinios.borrarPatrocinio(patrocinio);
         }
         vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->vista.mostrarPantalla("SIMULACION"));
     }
