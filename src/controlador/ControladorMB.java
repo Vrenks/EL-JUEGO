@@ -300,35 +300,44 @@ public class ControladorMB {
                              futbolista.getRendimiento(), futbolista.getSueldo()};
             tabla.addRow(fila);
         }
-        int fila = vista.getPanelFichaje().getFilaSeleccionada();
+        
+        vista.getPanelFichaje().getBtnFichar().addActionListener(e->{
+            int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador disponible para fichar.", "Fichaje");
             return;
         }
-        Object[] datos = new Object[tabla.getColumnCount()];
-        for (int columna = 0; columna < datos.length; columna++){
-            datos[columna] = tabla.getValueAt(fila, columna);
-            if (datos[columna] == null){
-                vista.mostrarError("Los datos del jugador seleccionado están incompletos.", "Error de fichaje");
+            Object[] datos = new Object[tabla.getColumnCount()];
+            for (int columna = 0; columna < datos.length; columna++){
+                datos[columna] = tabla.getValueAt(fila, columna);
+                if (datos[columna] == null){
+                    vista.mostrarError("Los datos del jugador seleccionado están incompletos.", "Error de fichaje");
+                    return;
+                }
+            }
+
+            Futbolista jugador = new Futbolista(
+                datos[0].toString(),
+                ((Number) datos[1]).intValue(),
+                datos[2].toString(),
+                ((Number) datos[3]).intValue(),
+                ((Number) datos[4]).doubleValue()
+            );
+            if (club.buscarJugador(jugador.getNombre()) != null){
+                vista.mostrarInformacion("Ese jugador ya forma parte del club.", "Fichaje");
                 return;
             }
-        }
 
-        Futbolista jugador = new Futbolista(
-            datos[0].toString(),
-            ((Number) datos[1]).intValue(),
-            datos[2].toString(),
-            ((Number) datos[3]).intValue(),
-            ((Number) datos[4]).doubleValue()
-        );
-        if (club.buscarJugador(jugador.getNombre()) != null){
-            vista.mostrarInformacion("Ese jugador ya forma parte del club.", "Fichaje");
-            return;
-        }
-
-        club.agregarJugador(jugador);
-        tabla.removeRow(fila);
-        ListarJugadores(club);
+            club.agregarJugador(jugador);
+            fichajes.borrarFutbolista(jugador);
+            tabla.removeRow(fila);
+            ListarJugadores(club);
+            
+            
+            
+        });
+        vista.mostrarPantalla("FICHAJE");
+        
     }
 
     private void despedirJugador(){
