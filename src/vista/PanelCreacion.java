@@ -169,8 +169,10 @@ public class PanelCreacion extends javax.swing.JPanel {
         this.BtnCreacionAGestion = BtnCreacionAGestion;
     }
 
-    public JComboBox<String> getBtnElegirDificultad() {
-        return BtnElegirDificultad;
+    public String getBtnElegirDificultad() {
+        if (BtnElegirDificultad.getSelectedItem() != null) 
+            return BtnElegirDificultad.getSelectedItem().toString();
+        return "";
     }
 
     public void setBtnElegirDificultad(JComboBox<String> BtnElegirDificultad) {
@@ -184,6 +186,11 @@ public class PanelCreacion extends javax.swing.JPanel {
     public void setTxtNombreEmpresario(JTextField TxtNombreEmpresario) {
         this.TxtNombreEmpresario = TxtNombreEmpresario;
     }
+
+    /*public void dificultadListener(String dificultad){
+        getBtnCreacionAGestion().addActionListener(e->dificultad=getBtnElegirDificultad());
+            //getBtnCreacionAGestion().addActionListener(e->dificultad = getBtnElegirDificultad());
+}*/
     
     
     

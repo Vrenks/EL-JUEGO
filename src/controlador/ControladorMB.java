@@ -8,6 +8,7 @@ package controlador;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -35,8 +36,9 @@ public class ControladorMB {
         ListaPatrocinios patrocinios = new ListaPatrocinios();
         ListaClubes clubes = new ListaClubes();
         
-        
+       
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp, club, clubes, patrocinios));
+        
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->gestionar());
         
         vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes));
@@ -74,24 +76,26 @@ public class ControladorMB {
     public void crear(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios){
         vista.mostrarPantalla("CREACION");
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
-        String dificultad = vista.getPanelCreacion().getBtnElegirDificultad().getSelectedItem().toString();
-        emp.setNombre(nombreEmpresario);
-        String nombreClub;
-        if (dificultad.equals("Premier League (Facil)")){
-            nombreClub="Liverpool";
-        } else if (dificultad.equals("Serie A (Normal)")){
-            nombreClub="Inter";
-        }
-        else{
-            nombreClub="Colo-Colo";
-        }
-        club.setNombre(nombreClub);
-        club.setDificultad(nombreClub);
-        clubBase(club, nombreClub);
-
-        
-        crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
-    }
+        final String[] dificultad = {""};
+        vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e-> {
+            dificultad[0]=vista.getPanelCreacion().getBtnElegirDificultad();
+            System.out.println(dificultad);
+            String nombreClub;
+            emp.setNombre(nombreEmpresario);
+            if (dificultad[0].equals("Premier League (Facil)")){
+                nombreClub="Liverpool";
+            } else if (dificultad[0].equals("Serie A (Normal)")){
+                nombreClub="Inter";
+            }
+            else{
+                nombreClub="Colo-Colo";
+            }
+            club.setNombre(nombreClub);
+            club.setDificultad(nombreClub);
+            clubBase(club, nombreClub);
+            crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
+            });
+}
 
     public void clubBase(Club club, String nombreClub){
         String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
@@ -154,14 +158,18 @@ public class ControladorMB {
     public void gestionar(){
         vista.mostrarPantalla("GESTION");
     }
-    
-    public void informacion(Club club){
-        vista.mostrarPantalla("INFORMACION");
-        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelInformacion().getTablaInformacion().getModel();
+
+    public void listar(Club club, JTable tablaPanel){
+        DefaultTableModel tabla = (DefaultTableModel) tablaPanel.getModel();
         tabla.setRowCount(0);
         for(Futbolista futbolista: club.getJugadores()){
             tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
         }
+    }
+    
+    public void informacion(Club club){
+        vista.mostrarPantalla("INFORMACION");
+        listar(club, vista.getPanelInformacion().getTablaInformacion());
     }
     
     public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes){
@@ -194,6 +202,7 @@ public class ControladorMB {
             patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
         }
         if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%2==0){
+            JOptionPane.showConfirmDialog(vista, "Nuevos patrocinadores dispoibles", "INFORMACION", 2);
             patrocinar(patrocinios, emp, club);
             ventasMoralidad(club, emp);
         }
@@ -234,6 +243,7 @@ public class ControladorMB {
             emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
             club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
             patrocinios.borrarPatrocinio(patrocinio);
+            vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->gestionar());
         }
         
     }
@@ -254,25 +264,10 @@ public class ControladorMB {
     
     public void editar(Club club){
         vista.mostrarPantalla("EDITAR");
-        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEditarJugador().getTablaEditar().getModel();
-        tabla.setRowCount(0);
-        for(Futbolista futbolista: club.getJugadores()){
-            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
-        }
-        int fila = vista.getPanelEditarJugador().getTablaEditar().getSelectedRow();
-        if (fila != -1) {
-            String nombreJugador = vista.getPanelEditarJugador().getTablaEditar().getValueAt(fila, 0).toString();
-            int dorsal = Integer.parseInt(vista.getPanelEditarJugador().getTxtDorsal().getText());
-            String posicion = vista.getPanelEditarJugador().getTxtPosicion().getText();
-            Futbolista jugador = club.buscarJugador(nombreJugador);
-            vista.getPanelEditarJugador().getBtnEditar().addActionListener(e->jugador.cambiarDorsalYPosicion(dorsal, posicion));
-            tabla.setRowCount(0);
-            for(Futbolista futbolista: club.getJugadores()){
-            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
-            }
-        }
+        listar(club, vista.getPanelEditarJugador().getTablaEditar());
         
     }
+        
     
     public void cambiar(){
         vista.mostrarPantalla("CAMBIAR JUGADOR");
