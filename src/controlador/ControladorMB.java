@@ -51,7 +51,7 @@ public class ControladorMB {
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar());
         vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->fichar());
-        vista.getPanelModificacionJugadores().getBtnModificacionAEditarJugador().addActionListener(e->editar());
+        vista.getPanelModificacionJugadores().getBtnModificacionAEditarJugador().addActionListener(e->editar(club));
         vista.getPanelModificacionJugadores().getBtnModificacionACambiarJugador().addActionListener(e->cambiar());
         
         vista.getPanelOpciones().getBtnOpcionesAGestion().addActionListener(e->gestionar());
@@ -225,25 +225,22 @@ public class ControladorMB {
         tabla.addRow(new Object[]{p2.getNombre(), p2.getMoralidad(), p2.getInversion()});
         vista.mostrarPantalla("PATROCINIOS");
         int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
-        String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
-        Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
-        int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
-        int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
-        emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
-        emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
-        club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
-        patrocinios.borrarPatrocinio(patrocinio);
+        if (fila!=-1){
+            String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
+            Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
+            int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
+            int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
+            emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
+            emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
+            club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
+            patrocinios.borrarPatrocinio(patrocinio);
+        }
+        
     }
     
     public void modificar(){
         vista.mostrarPantalla("MODIFICAR JUGADORES");
-        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEditarJugador().getTablaEditar().getModel();
-        tabla.setRowCount(0);
-        for(Futbolista futbolista: club.getJugadores()){
-            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
-        }
         
-
 
     }
     
@@ -255,12 +252,31 @@ public class ControladorMB {
         vista.mostrarPantalla("FICHAJE");
     }
     
-    public void editar(){
+    public void editar(Club club){
         vista.mostrarPantalla("EDITAR");
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEditarJugador().getTablaEditar().getModel();
+        tabla.setRowCount(0);
+        for(Futbolista futbolista: club.getJugadores()){
+            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
+        }
+        int fila = vista.getPanelEditarJugador().getTablaEditar().getSelectedRow();
+        if (fila != -1) {
+            String nombreJugador = vista.getPanelEditarJugador().getTablaEditar().getValueAt(fila, 0).toString();
+            int dorsal = Integer.parseInt(vista.getPanelEditarJugador().getTxtDorsal().getText());
+            String posicion = vista.getPanelEditarJugador().getTxtPosicion().getText();
+            Futbolista jugador = club.buscarJugador(nombreJugador);
+            vista.getPanelEditarJugador().getBtnEditar().addActionListener(e->jugador.cambiarDorsalYPosicion(dorsal, posicion));
+            tabla.setRowCount(0);
+            for(Futbolista futbolista: club.getJugadores()){
+            tabla.addRow(new Object[]{futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), futbolista.getRendimiento(), futbolista.getSueldo()});
+            }
+        }
+        
     }
     
     public void cambiar(){
         vista.mostrarPantalla("CAMBIAR JUGADOR");
+
     }
     
     public void crearClubesYPatrocinios(ListaClubes clubes, String nombreClub, ListaPatrocinios patrocinios){

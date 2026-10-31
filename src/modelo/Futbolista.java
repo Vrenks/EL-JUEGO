@@ -62,10 +62,10 @@ public class Futbolista {
     }
         */
 
-    public void cobrarSueldo() {
-        // Lógica para cobrar el sueldo del futbolista
+    public void cambiarDorsalYPosicion(int dorsal, String posicion){
+        this.setDorsal(dorsal);
+        this.setPosicion(posicion);
     }
-
     
 
 }

@@ -136,6 +136,13 @@ public class Club {
         jugadores.remove(jugador);
     }
 
+    public Futbolista buscarJugador(String nombre){
+        for (Futbolista futbolista: jugadores){
+            if (futbolista.getNombre().equals(nombre))
+                return futbolista;     
+        }
+        return null;
+    }
 
     
 
