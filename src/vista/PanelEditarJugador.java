@@ -103,7 +103,8 @@ public class PanelEditarJugador extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        TablaEditar.setShowHorizontalLines(true);
+        TablaEditar.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        TablaEditar.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(TablaEditar);
 
         BtnEditar.setText("Editar");
