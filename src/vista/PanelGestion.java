@@ -41,7 +41,7 @@ public class PanelGestion extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        BtnGestionACreacion = new javax.swing.JButton();
+        //BtnGestionACreacion = new javax.swing.JButton();
 
         BtnGestionAModificacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnGestionAModificacion.setText("Modificaciones");
@@ -153,7 +153,7 @@ public class PanelGestion extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        BtnGestionACreacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        /*BtnGestionACreacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnGestionACreacion.setText("Volver");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -170,7 +170,7 @@ public class PanelGestion extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(BtnGestionACreacion)
                 .addGap(0, 9, Short.MAX_VALUE))
-        );
+        ); */
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -204,13 +204,6 @@ public class PanelGestion extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnGestionASimulacionActionPerformed
 
-    public JButton getBtnGestionACreacion() {
-        return BtnGestionACreacion;
-    }
-
-    public void setBtnGestionACreacion(JButton BtnGestionACreacion) {
-        this.BtnGestionACreacion = BtnGestionACreacion;
-    }
 
     public JButton getBtnGestionAModificacion() {
         return BtnGestionAModificacion;
@@ -256,7 +249,6 @@ public class PanelGestion extends javax.swing.JPanel {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnGestionACreacion;
     private javax.swing.JButton BtnGestionAInformacion;
     private javax.swing.JButton BtnGestionAModificacion;
     private javax.swing.JButton BtnGestionAOpciones;

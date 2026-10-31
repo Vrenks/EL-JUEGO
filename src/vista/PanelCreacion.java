@@ -74,7 +74,7 @@ public class PanelCreacion extends javax.swing.JPanel {
 
         jLabel3.setText("Elige dificultad: ");
 
-        BtnElegirDificultad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Premier League (Fácil)", "Serie A (Normal)", "Liga de Primera Chile (Difícil)" }));
+        BtnElegirDificultad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Premier League (Facil)", "Serie A (Normal)", "Liga de Primera Chile (Dificil)" }));
         BtnElegirDificultad.addActionListener(this::BtnElegirDificultadActionPerformed);
 
         jTextArea1.setEditable(false);

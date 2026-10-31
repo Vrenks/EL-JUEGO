@@ -13,20 +13,23 @@ import java.util.ArrayList;
 public class Club {
 
     private String nombre;
+    private int rendimiento;
     private int PartidosGanados;
-    private int aficion;
-    private int ranking;
+    //todavía no: private int aficion;
+    // todavía no: private int ranking;
     private String dificultad;
     private int camisetasVendidas;
     private int entradasVendidas;
     private int CantidadPatrocinadores;
     private ArrayList<Futbolista> jugadores;
 
-    public Club(String nombre, int PartidosGanados, int aficion, int ranking, String dificultad, int camisetasVendidas, int entradasVendidas, int CantidadPatrocinadores) {
+    public Club(String nombre, int rendimiento, int PartidosGanados, /*  int aficion, int ranking,*/ String dificultad, int camisetasVendidas, int entradasVendidas, int CantidadPatrocinadores) {
         this.setNombre(nombre);
+        this.setRendimiento(rendimiento);
         this.setPartidosGanados(PartidosGanados);
-        this.setAficion(aficion);
-        this.setranking(ranking);
+        //this.setAficion(aficion);
+        //this.setranking(ranking);
+
         this.setDificultad(dificultad);
         this.setCamisetasVendidas(camisetasVendidas);
         this.setEntradasVendidas(entradasVendidas);
@@ -42,6 +45,14 @@ public class Club {
         this.nombre = nombre;
     }
 
+    public int getRendimiento(){
+        return rendimiento;
+    }
+
+    public void setRendimiento(int rendimiento){
+        this.rendimiento = rendimiento;
+    }
+
     public int getPartidosGanados() {
         return PartidosGanados;
     }
@@ -50,6 +61,7 @@ public class Club {
         PartidosGanados = partidosGanados;
     }
 
+    /* 
     public int getAficion() {
         return aficion;
     }
@@ -65,7 +77,7 @@ public class Club {
     public void setranking(int ranking) {
         this.ranking = ranking;
     }
-
+    */ 
     public String getDificultad() {
         return dificultad;
     }
@@ -106,6 +118,9 @@ public class Club {
         this.jugadores = jugadores;
     }
 
+    public void agregarJugador(Futbolista jugador){
+        jugadores.add(jugador);
+    }
 
 
 

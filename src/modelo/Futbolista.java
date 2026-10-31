@@ -56,10 +56,11 @@ public class Futbolista {
     public void setSueldo(double sueldo) {
         this.sueldo = sueldo;
     }
-
+    /* 
     public void meterGol() {
         this.rendimiento += 5;
     }
+        */
 
     public void cobrarSueldo() {
         // Lógica para cobrar el sueldo del futbolista
