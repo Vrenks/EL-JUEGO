@@ -5,8 +5,9 @@
 package controlador;
 
 
+import java.util.Random;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
-
 import modelo.Club;
 import modelo.Empresario;
 import modelo.Futbolista;
@@ -30,11 +31,12 @@ public class ControladorMB {
         this.vista=vista;
         this.emp=emp;
         this.club=club;
-        
+        ListaPatrocinios patrocinios = new ListaPatrocinios();
+        ListaClubes clubes = new ListaClubes();
 
         
         
-        vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp, club));
+        vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp, club, clubes, patrocinios));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->gestionar());
         
         vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular());
@@ -44,7 +46,7 @@ public class ControladorMB {
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar());
         vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular());
-        vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio());
+        vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio(patrocinios));
         
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar());
@@ -69,7 +71,7 @@ public class ControladorMB {
         
     }
     
-    public void crear(Empresario emp, Club club){
+    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios){
         vista.mostrarPantalla("CREACION");
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
         String dificultad = vista.getPanelCreacion().getBtnElegirDificultad().getSelectedItem().toString();
@@ -87,9 +89,8 @@ public class ControladorMB {
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
 
-        ListaPatrocinios patrocinios = new ListaPatrocinios();
-        ListaClubes clubes = new ListaClubes();
-        crearClubesYPatrocinios(clubes, dificultad, patrocinios);
+        
+        crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
     }
 
     public void clubBase(Club club, String nombreClub){
@@ -167,8 +168,18 @@ public class ControladorMB {
         vista.mostrarPantalla("SIMULACION");
     }
     
-    public void patrocinio(){
+    public void patrocinio(ListaPatrocinios patrocinios){
+        Random rand = new Random();
+        int numAleatorio1 = rand.nextInt(6);
+        int numAleatorio2 = rand.nextInt(6);
+        Patrocinio p1 = patrocinios.getPatrocinios().get(numAleatorio1);
+        Patrocinio p2 = patrocinios.getPatrocinios().get(numAleatorio2);
+        
+
         vista.mostrarPantalla("PATROCINIOS");
+        
+        
+        
     }
     
     public void modificar(){
@@ -272,7 +283,7 @@ public class ControladorMB {
         patrocinios.agregarPatrocinio(p4);
         patrocinios.agregarPatrocinio(p5);
         patrocinios.agregarPatrocinio(p6);
-        
+
     }
     
 }
