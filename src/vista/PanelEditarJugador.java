@@ -104,7 +104,6 @@ public class PanelEditarJugador extends javax.swing.JPanel {
             }
         });
         TablaEditar.setShowHorizontalLines(true);
-        TablaEditar.setShowVerticalLines(true);
         jScrollPane1.setViewportView(TablaEditar);
 
         BtnEditar.setText("Editar");
