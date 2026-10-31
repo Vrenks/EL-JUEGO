@@ -11,6 +11,7 @@ import modelo.Club;
 import modelo.Empresario;
 import modelo.Futbolista;
 import modelo.ListaClubes;
+import modelo.ListaFichajes;
 import modelo.ListaPatrocinios;
 import modelo.Patrocinio;
 import vista.VisualizadorMB;
@@ -32,11 +33,11 @@ public class ControladorMB {
         this.club=club;
         ListaPatrocinios patrocinios = new ListaPatrocinios();
         ListaClubes clubes = new ListaClubes();
-        
+        ListaFichajes fichajes = new ListaFichajes();
         
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->vista.mostrarPantalla("CREACION"));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{
-            crear(emp, club, clubes, patrocinios);
+            crear(emp, club, clubes, patrocinios, fichajes);
             gestionar();
         });
         
@@ -51,7 +52,7 @@ public class ControladorMB {
         
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar());
-        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->fichar());
+        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->ficharJugador());
         vista.getPanelModificacionJugadores().getBtnModificacionACambiarJugador().addActionListener(e->cambiar());
         vista.getPanelFichaje().getBtnFichar().addActionListener(e->ficharJugador());
         vista.getPanelCambiarJugador().getBtnCambiar().addActionListener(e->despedirJugador());
@@ -71,7 +72,7 @@ public class ControladorMB {
         
     }
     
-    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios){
+    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes){
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
         String dificultad = vista.getPanelCreacion().getBtnElegirDificultad();
         emp.setNombre(nombreEmpresario);
@@ -87,9 +88,8 @@ public class ControladorMB {
         club.setNombre(nombreClub);
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
-
-        
         crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
+
     }
 
     public void clubBase(Club club, String nombreClub){
@@ -264,10 +264,6 @@ public class ControladorMB {
         vista.mostrarPantalla("OPCIONES");
     }
     
-    public void fichar(){
-        vista.mostrarPantalla("FICHAJE");
-        
-    }
     public void cambiar(){
         ListarJugadores(club);
         vista.mostrarPantalla("CAMBIAR JUGADOR");
@@ -275,6 +271,7 @@ public class ControladorMB {
     }
 
     private void ficharJugador(){
+        vista.mostrarPantalla("FICHAJE");
         javax.swing.JTable tabla = vista.getPanelFichaje().getListaFichajes();
         int fila = tabla.getSelectedRow();
         if (fila == -1){
@@ -436,4 +433,30 @@ public class ControladorMB {
         emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
     }
 
+    public void opcionesFichaje(String nombreClub, ListaFichajes fichajes){
+        Futbolista f1;
+        Futbolista f2;
+        Futbolista f3;
+        Futbolista f4;
+        if (nombreClub.equals("Liverpool")){
+            f1 = new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000);
+            f2 = new Futbolista("Bradley Barcola", 11, "Extremo izquierdo", 10, 70000);
+            f3 = new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000);
+            f4 = new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000);
+        }else if (nombreClub.equals("Inter")){
+            f1 = new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000);
+            f2 = new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000);
+            f3 = new Futbolista("Petar Sucic", 12, "Volante", 4, 30000);
+            f4 = new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000);
+        }else{
+            f1 = new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000);
+            f2 = new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000);
+            f3 = new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000);
+            f4 = new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000);
+        }
+        fichajes.agregarFutbolista(f1);
+        fichajes.agregarFutbolista(f2);
+        fichajes.agregarFutbolista(f3);
+        fichajes.agregarFutbolista(f4);
+    }
 }
