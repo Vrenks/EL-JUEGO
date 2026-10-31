@@ -149,6 +149,10 @@ public class VisualizadorMB extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
     }
 
+    public int eleccion(String mensaje, String titulo){
+        return JOptionPane.showConfirmDialog(rootPane, mensaje, titulo, JOptionPane.YES_NO_OPTION);
+    }
+
     public boolean confirmarDespedidaJugador(String nombreJugador){
         int respuesta = JOptionPane.showConfirmDialog(
             this,

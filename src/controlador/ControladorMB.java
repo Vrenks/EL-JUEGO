@@ -193,6 +193,9 @@ public class ControladorMB {
             patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
         }
         if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%2==0){
+            int eleccion = vista.eleccion("Dos patrocinadores interesados. Presione YES para revisarlos o NO para seguir en la simulacion.", "INFORMACION PATROCINIOS");
+            if (eleccion!=0)
+                return;
             patrocinar(patrocinios, emp, club);
             ventasMoralidad(club, emp);
         }
@@ -210,6 +213,7 @@ public class ControladorMB {
                 vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
             }
         }
+
     }
 
     public void ListarJugadores(Club club){
@@ -248,7 +252,7 @@ public class ControladorMB {
             club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
             patrocinios.borrarPatrocinio(patrocinio);
         }
-        
+        vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->vista.mostrarPantalla("SIMULACION"));
     }
     
     public void modificar(){
