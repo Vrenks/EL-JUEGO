@@ -12,11 +12,13 @@ public class Patrocinio {
     private String nombre;
     private int moralidad;
     private int inversion;
+    private int partidosRestantes;
     
-    public Patrocinio(String nombre, int moralidad, int inversion) {
+    public Patrocinio(String nombre, int moralidad, int inversion, int partidosRestantes) {
         this.setNombre(nombre);
         this.setMoralidad(moralidad);
         this.setInversion(inversion);
+        this.setPartidosRestantes(partidosRestantes);
     }
 
     public String getNombre() {
@@ -42,6 +44,16 @@ public class Patrocinio {
     public void setInversion(int inversion) {
         this.inversion = inversion;
     }
+
+    public int getPartidosRestantes() {
+        return partidosRestantes;
+    }
+
+    public void setPartidosRestantes(int partidosRestantes) {
+        this.partidosRestantes = partidosRestantes;
+    }
+
+    
 
     /*public void empezarPatrocinio() {
         

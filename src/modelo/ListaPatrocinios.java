@@ -17,4 +17,15 @@ public class ListaPatrocinios {
         patrocinios.add(patrocinio);
     }
 
+    public void borrarPatrocinio(Patrocinio patrocinio){
+        patrocinios.remove(patrocinio);
+    }
+
+    public Patrocinio buscarPatrocinio(String nombre){
+        for (Patrocinio patrocinio: patrocinios){
+            if (nombre.equals(patrocinio.getNombre()))
+                return patrocinio;
+        }
+        return null;
+    }
 }

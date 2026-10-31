@@ -6,7 +6,8 @@ package controlador;
 
 
 import java.util.Random;
-import java.util.List;
+
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -38,13 +39,13 @@ public class ControladorMB {
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->crear(emp, club, clubes, patrocinios));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->gestionar());
         
-        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(0, patrocinios, club, clubes));
+        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes));
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar());
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
         vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club));
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar());
-        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(0, patrocinios, club, clubes));
+        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes));
         //vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio(patrocinios, emp, club));
         
         
@@ -163,17 +164,55 @@ public class ControladorMB {
         }
     }
     
-    public void simular(int partidosJugados, ListaPatrocinios patrocinios, Club club, ListaClubes clubes){
-        
+    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes){
+        Club rival = clubes.getClubes().get(club.getPartidosJugados());
+        Random rand = new Random();
+        String resultado;
+        int diferenciaRendimiento, diferenciaGoles;
+        if (rival.getRendimiento()<club.getRendimiento()){
+            diferenciaRendimiento=club.getRendimiento()-rival.getRendimiento();
+            diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
+            resultado = club.getNombre()+": "+ diferenciaGoles + "-0";
+            club.setPartidosGanados(club.getPartidosGanados()+1);
+            ventasRendimiento(diferenciaGoles, club, emp);
 
-
+        }else if (rival.getRendimiento()>club.getRendimiento()){
+            diferenciaRendimiento=rival.getRendimiento()-club.getRendimiento();
+            diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
+            resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
+            ventasRendimiento(diferenciaGoles*-1, club, emp);
+        }
+        else{ 
+            diferenciaGoles = 0;
+            resultado = "Empate: 0-0";
+        }
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
+        tabla.addRow(new Object[]{club.getPartidosJugados(), rival.getNombre(), resultado});
         vista.mostrarPantalla("SIMULACION");
-        if (partidosJugados!=0 && partidosJugados%2==0)
-            patrocinio(patrocinios, emp, club);
         club.setPartidosJugados(club.getPartidosJugados()+1);
+        for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
+            patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
+        }
+        if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%2==0){
+            patrocinar(patrocinios, emp, club);
+            ventasMoralidad(club, emp);
+        }
+        if (club.getPartidosJugados()!=0&&club.getPartidosJugados()%4==0){
+            int sueldos = 0;
+            for (Futbolista futbolista: club.getJugadores()){
+                sueldos+=futbolista.getSueldo();
+            }
+            JOptionPane.showMessageDialog(vista, "Sueldos cobrados: $"+sueldos, "INFORMACION IMPORTANTE", 1);
+        }
+        for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
+            if (patrocinio.getPartidosRestantes()==0){
+                club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
+                emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
+            }
+        }
     }
     
-    public void patrocinio(ListaPatrocinios patrocinios, Empresario emp, Club club){
+    public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club){
         Random rand = new Random();
         int numAleatorio1 = rand.nextInt(6);
         int numAleatorio2 = rand.nextInt(6);
@@ -186,11 +225,13 @@ public class ControladorMB {
         vista.mostrarPantalla("PATROCINIOS");
         int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
         String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
+        Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
         int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
         int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
-
         emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
         emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
+        club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
+        patrocinios.borrarPatrocinio(patrocinio);
     }
     
     public void modificar(){
@@ -281,12 +322,12 @@ public class ControladorMB {
         clubes.agregarClub(c14);
         clubes.agregarClub(c15);
 
-        Patrocinio p1 = new Patrocinio("Apple", 3, 270000);
-        Patrocinio p2 = new Patrocinio("UNICEF", 5, 80000);
-        Patrocinio p3 = new Patrocinio("LATAM", 4, 150000);
-        Patrocinio p4 = new Patrocinio("OpenAI", 2, 120000);
-        Patrocinio p5 = new Patrocinio("Betano", 1, 200000);
-        Patrocinio p6 = new Patrocinio("Tel Aviv Inver-sionistas", 0, 400000);
+        Patrocinio p1 = new Patrocinio("Apple", 0, 270000, 6);
+        Patrocinio p2 = new Patrocinio("UNICEF", 4, 80000, 6);
+        Patrocinio p3 = new Patrocinio("LATAM", 2, 150000, 6);
+        Patrocinio p4 = new Patrocinio("OpenAI", -1, 120000, 6);
+        Patrocinio p5 = new Patrocinio("Betano", -3, 200000, 6);
+        Patrocinio p6 = new Patrocinio("Tel Aviv Inver-sionistas", -5, 400000, 6);
         
         patrocinios.agregarPatrocinio(p1);
         patrocinios.agregarPatrocinio(p2);
@@ -297,4 +338,22 @@ public class ControladorMB {
 
     }
     
+    public void ventasRendimiento(int diferenciaGoles, Club club, Empresario emp){
+        int camisetas = diferenciaGoles*300;
+        club.setCamisetasVendidas(club.getCamisetasVendidas()+camisetas);
+        emp.setPuntuacion(emp.getPuntuacion()+camisetas*50);
+        int entradas = diferenciaGoles * 6000;
+        club.setEntradasVendidas(club.getEntradasVendidas()+entradas);
+        emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
+    }
+
+    public void ventasMoralidad(Club club, Empresario emp){
+        int camisetas = emp.getMoralidad()*100;
+        club.setCamisetasVendidas(club.getCamisetasVendidas()+camisetas);
+        emp.setPuntuacion(emp.getPuntuacion()+camisetas*50);
+        int entradas = emp.getMoralidad() * 3000;
+        club.setEntradasVendidas(club.getEntradasVendidas()+entradas);
+        emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
+    }
+
 }
