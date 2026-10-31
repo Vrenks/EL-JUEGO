@@ -92,23 +92,10 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        BtnCambiar.setText("Cambiar");
-        BtnCambiar.addActionListener(this::BtnCambiarActionPerformed);
+        BtnCambiar.setText("Despedir jugador");
 
         TablaCambiar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
+            new Object [][] {},
             new String [] {
                 "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
             }
@@ -183,16 +170,20 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnCambiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCambiarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnCambiarActionPerformed
-
     public JButton getBtnCambiarJugadorAModificacion() {
         return BtnCambiarJugadorAModificacion;
     }
 
     public void setBtnCambiarJugadorAModificacion(JButton BtnCambiarJugadorAModificacion) {
         this.BtnCambiarJugadorAModificacion = BtnCambiarJugadorAModificacion;
+    }
+
+    public JButton getBtnCambiar() {
+        return BtnCambiar;
+    }
+
+    public javax.swing.JTable getTablaCambiar() {
+        return TablaCambiar;
     }
     
 
