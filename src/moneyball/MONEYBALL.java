@@ -22,9 +22,9 @@ public class MONEYBALL {
         
         VisualizadorMB vista = new VisualizadorMB(); 
         Empresario emp = new Empresario("", 0, 0);
-        Club club = new Club("", 45, 0, "", 0, 0, 0);
+        Club club = new Club("", 45, 0, 0, "", 0, 0, 0);
         ControladorMB c = new ControladorMB(vista, emp, club);
-        
+
 
 
 

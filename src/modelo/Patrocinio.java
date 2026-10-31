@@ -11,9 +11,9 @@ package modelo;
 public class Patrocinio {
     private String nombre;
     private int moralidad;
-    private double inversion;
+    private int inversion;
     
-    public Patrocinio(String nombre, int moralidad, double inversion) {
+    public Patrocinio(String nombre, int moralidad, int inversion) {
         this.setNombre(nombre);
         this.setMoralidad(moralidad);
         this.setInversion(inversion);
@@ -35,21 +35,21 @@ public class Patrocinio {
         this.moralidad = moralidad;
     }
 
-    public double getInversion() {
+    public int getInversion() {
         return inversion;
     }
 
-    public void setInversion(double inversion) {
+    public void setInversion(int inversion) {
         this.inversion = inversion;
     }
 
-    public void empezarPatrocinio() {
-        // Lógica para empezar el patrocinio
-    }
+    /*public void empezarPatrocinio() {
+        
+    }*/
 
-    public void terminarPatrocinio() {
+    /*public void terminarPatrocinio() {
         // Lógica para terminar el patrocinio
-    }
+    }*/
 
 
     

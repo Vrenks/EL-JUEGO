@@ -15,6 +15,7 @@ public class Club {
     private String nombre;
     private int rendimiento;
     private int PartidosGanados;
+    private int partidosJugados;
     //todavía no: private int aficion;
     // todavía no: private int ranking;
     private String dificultad;
@@ -23,10 +24,11 @@ public class Club {
     private int CantidadPatrocinadores;
     private ArrayList<Futbolista> jugadores;
 
-    public Club(String nombre, int rendimiento, int PartidosGanados, /*  int aficion, int ranking,*/ String dificultad, int camisetasVendidas, int entradasVendidas, int CantidadPatrocinadores) {
+    public Club(String nombre, int rendimiento, int PartidosGanados, int partidosJugados, String dificultad, int camisetasVendidas, int entradasVendidas, int CantidadPatrocinadores) {
         this.setNombre(nombre);
         this.setRendimiento(rendimiento);
         this.setPartidosGanados(PartidosGanados);
+        this.setPartidosJugados(partidosJugados);
         //this.setAficion(aficion);
         //this.setranking(ranking);
 
@@ -59,6 +61,14 @@ public class Club {
 
     public void setPartidosGanados(int partidosGanados) {
         PartidosGanados = partidosGanados;
+    }
+
+    public int getPartidosJugados() {
+        return partidosJugados;
+    }
+
+    public void setPartidosJugados(int partidosJugados) {
+        this.partidosJugados = partidosJugados;
     }
 
     /* 
@@ -125,6 +135,7 @@ public class Club {
     public void despedirJugador(Futbolista jugador) {
         jugadores.remove(jugador);
     }
+
 
     
 
