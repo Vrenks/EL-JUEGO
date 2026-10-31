@@ -5,6 +5,8 @@
 package vista;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 /**
  *
@@ -166,6 +168,24 @@ public class PanelCreacion extends javax.swing.JPanel {
     public void setBtnCreacionAGestion(JButton BtnCreacionAGestion) {
         this.BtnCreacionAGestion = BtnCreacionAGestion;
     }
+
+    public JComboBox<String> getBtnElegirDificultad() {
+        return BtnElegirDificultad;
+    }
+
+    public void setBtnElegirDificultad(JComboBox<String> BtnElegirDificultad) {
+        this.BtnElegirDificultad = BtnElegirDificultad;
+    }
+
+    public JTextField getTxtNombreEmpresario() {
+        return TxtNombreEmpresario;
+    }
+
+    public void setTxtNombreEmpresario(JTextField TxtNombreEmpresario) {
+        this.TxtNombreEmpresario = TxtNombreEmpresario;
+    }
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

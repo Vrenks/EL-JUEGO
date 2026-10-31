@@ -19,7 +19,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
     private PanelInicio panelInicio;
     private PanelCreacion panelCreacion;
     private PanelGestion panelGestion;
-    private PanelResolucion panelResolucion;
+    private PanelInformacion panelInformacion;
     private PanelSimulacion panelSimulacion;
     private PanelOpciones panelOpciones;
     private PanelPatrocinios panelPatrocinios;
@@ -39,7 +39,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
         panelInicio = new PanelInicio();
         panelCreacion = new PanelCreacion();
         panelGestion = new PanelGestion();
-        panelResolucion = new PanelResolucion();
+        panelInformacion = new PanelInformacion();
         panelSimulacion = new PanelSimulacion();
         panelOpciones = new PanelOpciones();
         panelPatrocinios = new PanelPatrocinios();
@@ -52,7 +52,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
         contenedor.add(panelInicio, "INICIO");
         contenedor.add(panelCreacion, "CREACION");
         contenedor.add(panelGestion, "GESTION");
-        contenedor.add(panelResolucion, "PROBLEMAS");
+        contenedor.add(panelInformacion, "INFOMACION");
         contenedor.add(panelSimulacion, "SIMULACION");
         contenedor.add(panelModificacionJugadores, "MODIFICAR JUGADORES");
         contenedor.add(panelOpciones, "OPCIONES");
@@ -134,8 +134,8 @@ public class VisualizadorMB extends javax.swing.JFrame {
         return panelPatrocinios;
     }
     
-    public PanelResolucion getPanelResolucion(){
-        return panelResolucion;
+    public PanelInformacion getPanelInformacion(){
+        return panelInformacion;
     }
     
     public PanelSimulacion getPanelSimulacion(){
