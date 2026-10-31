@@ -190,12 +190,13 @@ public class ControladorMB {
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
         for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
-            if (patrocinio.isAsociado())
+            if (patrocinio.isAsociado()){
                 patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
-            if (patrocinio.getPartidosRestantes()<=0){
-                club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
-                emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
-                vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+                if (patrocinio.getPartidosRestantes()<=0){
+                    club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
+                    emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
+                    vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+                }
             }
         }
         if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%3==0){
