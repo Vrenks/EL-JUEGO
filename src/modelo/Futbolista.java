@@ -62,10 +62,4 @@ public class Futbolista {
     }
         */
 
-    public void cambiarDorsalYPosicion(int dorsal, String posicion){
-        this.setDorsal(dorsal);
-        this.setPosicion(posicion);
-    }
-    
-
 }

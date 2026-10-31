@@ -5,6 +5,7 @@
 package vista;
 
 import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -26,7 +27,6 @@ public class VisualizadorMB extends javax.swing.JFrame {
     private PanelModificacionJugadores panelModificacionJugadores;
     private PanelCambiarJugador panelCambiarJugador;
     private PanelFichaje panelFichaje;
-    private PanelEditarJugador panelEditarJugador;
     
     /**
      * Creates new form VisualizadorMB
@@ -46,7 +46,6 @@ public class VisualizadorMB extends javax.swing.JFrame {
         panelModificacionJugadores = new PanelModificacionJugadores();
         panelCambiarJugador = new PanelCambiarJugador();
         panelFichaje = new PanelFichaje();
-        panelEditarJugador = new PanelEditarJugador();
         
         
         contenedor.add(panelInicio, "INICIO");
@@ -54,11 +53,10 @@ public class VisualizadorMB extends javax.swing.JFrame {
         contenedor.add(panelGestion, "GESTION");
         contenedor.add(panelInformacion, "INFORMACION");
         contenedor.add(panelSimulacion, "SIMULACION");
-        contenedor.add(panelModificacionJugadores, "MODIFICAR JUGADORES");
+        contenedor.add(panelModificacionJugadores, "MODIFICAR CLUB");
         contenedor.add(panelOpciones, "OPCIONES");
         contenedor.add(panelPatrocinios, "PATROCINIOS");
         contenedor.add(panelFichaje, "FICHAJE");
-        contenedor.add(panelEditarJugador, "EDITAR");
         contenedor.add(panelCambiarJugador, "CAMBIAR JUGADOR");
         cardlayout.show(contenedor, "INICIO");
         
@@ -106,10 +104,6 @@ public class VisualizadorMB extends javax.swing.JFrame {
         return panelCreacion;
     }
     
-    public PanelEditarJugador getPanelEditarJugador(){
-        return panelEditarJugador;
-    }
-    
     public PanelCambiarJugador getPanelCambiarJugador(){
         return panelCambiarJugador;
     }
@@ -145,6 +139,25 @@ public class VisualizadorMB extends javax.swing.JFrame {
     
     public void mostrarPantalla(String nombre){
         cardlayout.show(contenedor, nombre);
+    }
+
+    public void mostrarInformacion(String mensaje, String titulo){
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void mostrarError(String mensaje, String titulo){
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+
+    public boolean confirmarDespedidaJugador(String nombreJugador){
+        int respuesta = JOptionPane.showConfirmDialog(
+            this,
+            "¿Deseas despedir al jugador " + nombreJugador + "?",
+            "Confirmar despido",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        return respuesta == JOptionPane.YES_OPTION;
     }
     
     

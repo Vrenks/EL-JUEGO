@@ -32,9 +32,10 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
         BtnModificacionAGestion = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         BtnModificacionAFichaje = new javax.swing.JButton();
-        BtnModificacionAEditarJugador = new javax.swing.JButton();
         BtnModificacionACambiarJugador = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaJugadores = new javax.swing.JTable();
 
         BtnModificacionAGestion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnModificacionAGestion.setText("Volver");
@@ -59,11 +60,31 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
         BtnModificacionAFichaje.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnModificacionAFichaje.setText("Fichar jugador");
 
-        BtnModificacionAEditarJugador.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
-        BtnModificacionAEditarJugador.setText("Editar jugador");
-
         BtnModificacionACambiarJugador.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnModificacionACambiarJugador.setText("Despedir jugador");
+
+        TablaJugadores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {},
+            new String [] {
+                "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(TablaJugadores);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -72,9 +93,7 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BtnModificacionAFichaje)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addComponent(BtnModificacionAEditarJugador)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BtnModificacionACambiarJugador)
                 .addGap(14, 14, 14))
         );
@@ -83,7 +102,6 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnModificacionAFichaje)
-                    .addComponent(BtnModificacionAEditarJugador)
                     .addComponent(BtnModificacionACambiarJugador))
                 .addGap(0, 41, Short.MAX_VALUE))
         );
@@ -104,6 +122,7 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addGap(82, 82, 82))
+                    .addComponent(jScrollPane1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -114,7 +133,9 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -126,14 +147,6 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
 
     public void setBtnModificacionACambiarJugador(JButton BtnModificacionACambiarJugador) {
         this.BtnModificacionACambiarJugador = BtnModificacionACambiarJugador;
-    }
-
-    public JButton getBtnModificacionAEditarJugador() {
-        return BtnModificacionAEditarJugador;
-    }
-
-    public void setBtnModificacionAEditarJugador(JButton BtnModificacionAEditarJugador) {
-        this.BtnModificacionAEditarJugador = BtnModificacionAEditarJugador;
     }
 
     public JButton getBtnModificacionAFichaje() {
@@ -151,16 +164,21 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
     public void setBtnModificacionAGestion(JButton BtnModificacionAGestion) {
         this.BtnModificacionAGestion = BtnModificacionAGestion;
     }
+
+    public javax.swing.JTable getTablaJugadores() {
+        return TablaJugadores;
+    }
     
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnModificacionACambiarJugador;
-    private javax.swing.JButton BtnModificacionAEditarJugador;
     private javax.swing.JButton BtnModificacionAFichaje;
     private javax.swing.JButton BtnModificacionAGestion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable TablaJugadores;
     // End of variables declaration//GEN-END:variables
 }

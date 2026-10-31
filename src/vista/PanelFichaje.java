@@ -35,7 +35,7 @@ public class PanelFichaje extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        TablaFichaje = new javax.swing.JTable();
+        ListaFichajes = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         BtnFichar = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
@@ -66,12 +66,8 @@ public class PanelFichaje extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(153, 153, 255));
         jLabel1.setText("Fichar jugador");
 
-        TablaFichaje.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
+        ListaFichajes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {},
             new String [] {
                 "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
             }
@@ -91,8 +87,8 @@ public class PanelFichaje extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        TablaFichaje.setShowHorizontalLines(true);
-        jScrollPane1.setViewportView(TablaFichaje);
+        ListaFichajes.setShowHorizontalLines(true);
+        jScrollPane1.setViewportView(ListaFichajes);
 
         BtnFichar.setText("Fichar");
 
@@ -212,12 +208,12 @@ public class PanelFichaje extends javax.swing.JPanel {
         this.LblPuntuacion2 = LblPuntuacion2;
     }
 
-    public JTable getTablaFichaje() {
-        return TablaFichaje;
+    public JTable getListaFichajes() {
+        return ListaFichajes;
     }
 
-    public void setTablaFichaje(JTable TablaFichaje) {
-        this.TablaFichaje = TablaFichaje;
+    public void setListaFichajes(JTable ListaFichajes) {
+        this.ListaFichajes = ListaFichajes;
     }
     
     
@@ -226,7 +222,7 @@ public class PanelFichaje extends javax.swing.JPanel {
     private javax.swing.JButton BtnFichajeAModificacion;
     private javax.swing.JButton BtnFichar;
     private javax.swing.JLabel LblPuntuacion2;
-    private javax.swing.JTable TablaFichaje;
+    private javax.swing.JTable ListaFichajes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
