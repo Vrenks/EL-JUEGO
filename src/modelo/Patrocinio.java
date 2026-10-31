@@ -13,13 +13,16 @@ public class Patrocinio {
     private int moralidad;
     private int inversion;
     private int partidosRestantes;
+    private boolean asociado;
     
     public Patrocinio(String nombre, int moralidad, int inversion, int partidosRestantes) {
         this.setNombre(nombre);
         this.setMoralidad(moralidad);
         this.setInversion(inversion);
         this.setPartidosRestantes(partidosRestantes);
+        this.setAsociado(false);
     }
+
 
     public String getNombre() {
         return nombre;
@@ -51,6 +54,14 @@ public class Patrocinio {
 
     public void setPartidosRestantes(int partidosRestantes) {
         this.partidosRestantes = partidosRestantes;
+    }
+
+    public boolean isAsociado() {
+        return asociado;
+    }
+
+    public void setAsociado(boolean asociado) {
+        this.asociado = asociado;
     }
 
     

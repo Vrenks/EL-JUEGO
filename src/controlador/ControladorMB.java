@@ -89,7 +89,7 @@ public class ControladorMB {
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
         crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
-
+        opcionesFichaje(nombreClub, fichajes);
     }
 
     public void clubBase(Club club, String nombreClub){
@@ -190,7 +190,8 @@ public class ControladorMB {
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
         for (Patrocinio patrocinio: patrocinios.getPatrocinios()){
-            patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
+            if (patrocinio.isAsociado())
+                patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
         }
         if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%2==0){
             int eleccion = vista.eleccion("Dos patrocinadores interesados. Presione YES para revisarlos o NO para seguir en la simulacion.", "INFORMACION PATROCINIOS");
@@ -212,7 +213,7 @@ public class ControladorMB {
                 emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
                 vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
             }
-        }
+        } 
 
     }
 
@@ -250,6 +251,7 @@ public class ControladorMB {
             emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
             emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
             club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
+            patrocinio.setAsociado(true);
             patrocinios.borrarPatrocinio(patrocinio);
         }
         vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->vista.mostrarPantalla("SIMULACION"));
