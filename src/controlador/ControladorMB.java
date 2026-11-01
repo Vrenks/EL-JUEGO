@@ -293,8 +293,8 @@ public class ControladorMB {
                 String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
                 Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
                 patrocinio.setAsociado(true);
-                int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
-                int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
+                int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
+                int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
                 emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
                 emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
                 club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
