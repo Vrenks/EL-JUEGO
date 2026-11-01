@@ -34,6 +34,7 @@ public class PanelGestion extends javax.swing.JPanel {
         BtnGestionASimulacion = new javax.swing.JButton();
         BtnGestionAOpciones = new javax.swing.JButton();
         BtnGestionAInformacion = new javax.swing.JButton();
+        BtnRivales = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -41,7 +42,7 @@ public class PanelGestion extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        //BtnGestionACreacion = new javax.swing.JButton();
+        BtnGestionACreacion = new javax.swing.JButton();
 
         BtnGestionAModificacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnGestionAModificacion.setText("Modificaciones");
@@ -57,6 +58,9 @@ public class PanelGestion extends javax.swing.JPanel {
         BtnGestionAInformacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnGestionAInformacion.setText("Información");
 
+        BtnRivales.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        BtnRivales.setText("Rivales");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -71,6 +75,10 @@ public class PanelGestion extends javax.swing.JPanel {
                     .addComponent(BtnGestionAOpciones)
                     .addComponent(BtnGestionAInformacion))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BtnRivales)
+                .addGap(147, 147, 147))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,7 +87,9 @@ public class PanelGestion extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnGestionAOpciones)
                     .addComponent(BtnGestionASimulacion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnRivales)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnGestionAInformacion)
                     .addComponent(BtnGestionAModificacion))
@@ -153,7 +163,7 @@ public class PanelGestion extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        /*BtnGestionACreacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        BtnGestionACreacion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnGestionACreacion.setText("Volver");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -170,7 +180,7 @@ public class PanelGestion extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(BtnGestionACreacion)
                 .addGap(0, 9, Short.MAX_VALUE))
-        ); */
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -194,7 +204,7 @@ public class PanelGestion extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -204,6 +214,13 @@ public class PanelGestion extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnGestionASimulacionActionPerformed
 
+    public JButton getBtnGestionACreacion() {
+        return BtnGestionACreacion;
+    }
+
+    public void setBtnGestionACreacion(JButton BtnGestionACreacion) {
+        this.BtnGestionACreacion = BtnGestionACreacion;
+    }
 
     public JButton getBtnGestionAModificacion() {
         return BtnGestionAModificacion;
@@ -249,10 +266,12 @@ public class PanelGestion extends javax.swing.JPanel {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnGestionACreacion;
     private javax.swing.JButton BtnGestionAInformacion;
     private javax.swing.JButton BtnGestionAModificacion;
     private javax.swing.JButton BtnGestionAOpciones;
     private javax.swing.JButton BtnGestionASimulacion;
+    private javax.swing.JButton BtnRivales;
     private javax.swing.JLabel LblPuntuacion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
