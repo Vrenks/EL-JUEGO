@@ -21,12 +21,12 @@ public class ListaClubes {
         clubes.remove(club);
     }
 
-    public Club buscarclub(String nombre){
+    public void modificarRival(Club rival){
         for (Club club: clubes){
-            if (nombre.equals(club.getNombre()))
-                return club;
+            if (rival.getNombre().equals(club.getNombre())){
+                club.setPartidosJugados(rival.getPartidosJugados());
+            }
         }
-        return null;
     }
 
     public int getCantidad(){

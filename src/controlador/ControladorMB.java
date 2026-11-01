@@ -36,11 +36,12 @@ public class ControladorMB {
         ListaPatrocinios patrocinios = new ListaPatrocinios();
         ListaClubes clubes = new ListaClubes();
         ListaFichajes fichajes = new ListaFichajes();
+        ListaClubes clubesCopia = new ListaClubes();
         
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->vista.mostrarPantalla("CREACION"));
-        vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, patrocinios, fichajes);
+        vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, clubesCopia, patrocinios, fichajes);
                                                                                 gestionar(emp);});
-        ListaClubes clubesCopia = clubes;
+
         
         vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar(emp));
@@ -83,7 +84,7 @@ public class ControladorMB {
         
     }
     
-    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes){
+    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
         String dificultad = vista.getPanelCreacion().getBtnElegirDificultad();
         emp.setNombre(nombreEmpresario);
@@ -99,7 +100,7 @@ public class ControladorMB {
         club.setNombre(nombreClub);
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
-        crearClubesYPatrocinios(clubes, nombreClub, patrocinios);
+        crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
         opcionesFichaje(nombreClub, fichajes);
     }
 
@@ -178,18 +179,13 @@ public class ControladorMB {
         }
     }
     
-    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubesCopia, ListaClubes clubes, Empresario emp){
-        Random rivalRand = new Random();
-        boolean bucle = true;
-        Club rival = clubesCopia.getClubes().get(rivalRand.nextInt(clubesCopia.getCantidad()));
-        while (bucle){
-            if (!rival.isEnfrentado()){
-                break;
-            }else {
-                Random rivalRand2 = new Random();
-                rival = clubesCopia.getClubes().get(rivalRand2.nextInt(clubesCopia.getCantidad()));
-            }    
-        }
+    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
+        Club rival;
+        do{
+            Random rivalRand = new Random();
+            rival = clubesCopia.getClubes().get(rivalRand.nextInt(clubesCopia.getCantidad()));
+        }while (rival.isEnfrentado());
+
         Random rand = new Random();
         String resultado;
         int diferenciaRendimiento, diferenciaGoles;
@@ -205,15 +201,15 @@ public class ControladorMB {
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
             ventasRendimiento(diferenciaGoles*-1, club, emp);
-            rival.setPartidosGanados(rival.getPartidosGanados()+1);
+            //rival.setPartidosGanados(rival.getPartidosGanados()+1);
         }
         else{ 
             diferenciaGoles = 0;
             resultado = "Empate: 0-0";
         }
+
         rival.setPartidosJugados(rival.getPartidosJugados()+1);
-        Club rivalNoCopia = clubes.buscarclub(rival.getNombre());
-        rivalNoCopia = rival;
+        clubes.modificarRival(rival);
         clubesCopia.borrarClub(rival);
 
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
@@ -395,7 +391,7 @@ public class ControladorMB {
         ListarJugadores(club);
     }
     
-    public void crearClubesYPatrocinios(ListaClubes clubes, String nombreClub, ListaPatrocinios patrocinios){
+    public void crearClubesYPatrocinios(ListaClubes clubes, ListaClubes clubesCopia, String nombreClub, ListaPatrocinios patrocinios){
         Club c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15;
         if (nombreClub.equals("Liverpool")){
             c1= new Club("Arsenal", 62, 0, 0, "", 0, 0, 0); 
@@ -462,6 +458,39 @@ public class ControladorMB {
         clubes.agregarClub(c13);
         clubes.agregarClub(c14);
         clubes.agregarClub(c15);
+
+        Club cc1, cc2, cc3, cc4, cc5, cc6, cc7, cc8, cc9, cc10, cc11, cc12, cc13, cc14, cc15;
+            cc1 = new Club(c1.getNombre(), c1.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc2 = new Club(c2.getNombre(), c2.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc3 = new Club(c3.getNombre(), c3.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc4 = new Club(c4.getNombre(), c4.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc5 = new Club(c5.getNombre(), c5.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc6 = new Club(c6.getNombre(), c6.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc7 = new Club(c7.getNombre(), c7.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc8 = new Club(c8.getNombre(), c8.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc9 = new Club(c9.getNombre(), c9.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc10 = new Club(c10.getNombre(), c10.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc11 = new Club(c11.getNombre(), c11.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc12 = new Club(c12.getNombre(), c12.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc13 = new Club(c13.getNombre(), c13.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc14 = new Club(c14.getNombre(), c14.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+            cc15 = new Club(c15.getNombre(), c15.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
+        
+        clubesCopia.agregarClub(cc1);
+        clubesCopia.agregarClub(cc2);
+        clubesCopia.agregarClub(cc3);
+        clubesCopia.agregarClub(cc4);
+        clubesCopia.agregarClub(cc5);
+        clubesCopia.agregarClub(cc6);
+        clubesCopia.agregarClub(cc7);
+        clubesCopia.agregarClub(cc8);
+        clubesCopia.agregarClub(cc9);
+        clubesCopia.agregarClub(cc10);
+        clubesCopia.agregarClub(cc11);
+        clubesCopia.agregarClub(cc12);
+        clubesCopia.agregarClub(cc13);
+        clubesCopia.agregarClub(cc14);
+        clubesCopia.agregarClub(cc15);
 
         Patrocinio p1 = new Patrocinio("Apple", 0, 270000, 6);
         Patrocinio p2 = new Patrocinio("UNICEF", 4, 80000, 6);
