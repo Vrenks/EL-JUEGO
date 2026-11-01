@@ -46,6 +46,7 @@ public class ControladorMB {
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
         vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club));
         
+        
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar());
         vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes));
         //vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio(patrocinios, emp, club));
@@ -480,4 +481,13 @@ public class ControladorMB {
         fichajes.agregarFutbolista(f3);
         fichajes.agregarFutbolista(f4);
     }
+
+    public void listarRivales(ListaClubes clubes){
+        DefaultTableModel tabla = (DefaultTableModel) vista.getInformacionRivales().getTablaRivales().getModel();
+        tabla.setRowCount(0);
+        for(Club club: clubes.getClubes()){
+            tabla.addRow(new Object[]{club.getNombre(), club.getPartidosJugados(), club.getPartidosGanados(), club.getRendimiento()});
+        }
+    }
+
 }

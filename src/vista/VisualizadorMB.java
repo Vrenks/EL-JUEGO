@@ -27,6 +27,10 @@ public class VisualizadorMB extends javax.swing.JFrame {
     private PanelModificacionJugadores panelModificacionJugadores;
     private PanelCambiarJugador panelCambiarJugador;
     private PanelFichaje panelFichaje;
+    private InformacionRivales informacionRivales;
+    private PanelVictoria panelVictoria;
+    private PanelDerrota panelDerrota;
+
     
     /**
      * Creates new form VisualizadorMB
@@ -46,6 +50,9 @@ public class VisualizadorMB extends javax.swing.JFrame {
         panelModificacionJugadores = new PanelModificacionJugadores();
         panelCambiarJugador = new PanelCambiarJugador();
         panelFichaje = new PanelFichaje();
+        informacionRivales = new InformacionRivales();
+        panelVictoria = new PanelVictoria();
+        panelDerrota = new PanelDerrota();
         
         
         contenedor.add(panelInicio, "INICIO");
@@ -58,6 +65,9 @@ public class VisualizadorMB extends javax.swing.JFrame {
         contenedor.add(panelPatrocinios, "PATROCINIOS");
         contenedor.add(panelFichaje, "FICHAJE");
         contenedor.add(panelCambiarJugador, "CAMBIAR JUGADOR");
+        contenedor.add(informacionRivales, "INFORMACION RIVALES");
+        contenedor.add(panelVictoria, "VICTORIA");
+        contenedor.add(panelDerrota, "DERROTA");
         cardlayout.show(contenedor, "INICIO");
         
         setContentPane(contenedor);
@@ -136,7 +146,30 @@ public class VisualizadorMB extends javax.swing.JFrame {
         return panelSimulacion;
     }
     
-    
+    public InformacionRivales getInformacionRivales() {
+        return informacionRivales;
+    }
+
+    public void setInformacionRivales(InformacionRivales informacionRivales) {
+        this.informacionRivales = informacionRivales;
+    }
+
+    public PanelVictoria getPanelVictoria() {
+        return panelVictoria;
+    }
+
+    public void setPanelVictoria(PanelVictoria panelVictoria) {
+        this.panelVictoria = panelVictoria;
+    }
+
+    public PanelDerrota getPanelDerrota() {
+        return panelDerrota;
+    }
+
+    public void setPanelDerrota(PanelDerrota panelDerrota) {
+        this.panelDerrota = panelDerrota;
+    }
+
     public void mostrarPantalla(String nombre){
         cardlayout.show(contenedor, nombre);
     }
