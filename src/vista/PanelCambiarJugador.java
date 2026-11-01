@@ -95,7 +95,9 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
         BtnCambiar.setText("Despedir jugador");
 
         TablaCambiar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
+            new Object [][] {
+
+            },
             new String [] {
                 "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
             }

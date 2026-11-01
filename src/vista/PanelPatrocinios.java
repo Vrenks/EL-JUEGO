@@ -115,8 +115,6 @@ public class PanelPatrocinios extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        TablaPatrocinadores.setShowHorizontalLines(true);
-        TablaPatrocinadores.setShowVerticalLines(true);
         jScrollPane1.setViewportView(TablaPatrocinadores);
 
         BtnElegirPatrocinador.setText("Elegir");

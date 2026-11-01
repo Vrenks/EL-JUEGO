@@ -40,17 +40,17 @@ public class InformacionRivales extends javax.swing.JPanel {
 
         TablaRivales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Nombre", "Partidos Jugados", "Partidos Ganados", "Rendimiento"
+                "Nombre", "Partidos Jugados", "Rendimiento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -37,7 +37,7 @@ public class PanelSimulacion extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         LblPuntuacion = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        //BtnSimulacionAPatrocinios = new javax.swing.JButton();
+        BtnSimulacionAPatrocinios = new javax.swing.JButton();
         BtnSimularDeNuevo = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -101,8 +101,8 @@ public class PanelSimulacion extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        //BtnSimulacionAPatrocinios.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
-        //BtnSimulacionAPatrocinios.setText("Patrocinios");
+        BtnSimulacionAPatrocinios.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        BtnSimulacionAPatrocinios.setText("Patrocinios");
 
         BtnSimularDeNuevo.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnSimularDeNuevo.setText("Simular de nuevo");
@@ -114,34 +114,24 @@ public class PanelSimulacion extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BtnSimularDeNuevo)
-                .addContainerGap(397, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BtnSimulacionAPatrocinios)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(BtnSimularDeNuevo)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnSimulacionAPatrocinios)
+                    .addComponent(BtnSimularDeNuevo))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
         TablaPartido.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         TablaPartido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "N° partido", "Rival", "Resultado"
@@ -155,7 +145,6 @@ public class PanelSimulacion extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        TablaPartido.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(TablaPartido);
         if (TablaPartido.getColumnModel().getColumnCount() > 0) {
             TablaPartido.getColumnModel().getColumn(2).setPreferredWidth(10);
@@ -245,7 +234,7 @@ public class PanelSimulacion extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnSimulacionAGestion;
-    //private javax.swing.JButton BtnSimulacionAPatrocinios;
+    private javax.swing.JButton BtnSimulacionAPatrocinios;
     private javax.swing.JButton BtnSimularDeNuevo;
     private javax.swing.JLabel LblPuntuacion;
     private javax.swing.JTable TablaPartido;

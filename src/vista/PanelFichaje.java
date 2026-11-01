@@ -67,7 +67,9 @@ public class PanelFichaje extends javax.swing.JPanel {
         jLabel1.setText("Fichar jugador");
 
         ListaFichajes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
+            new Object [][] {
+
+            },
             new String [] {
                 "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
             }

@@ -164,13 +164,13 @@ public class ControladorMB {
     
     public void gestionar(Empresario emp){
         revisarDerrota(emp);
-        vista.getPanelGestion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelGestion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("GESTION");
     }
     
     public void informacion(Club club, Empresario emp){
         revisarDerrota(emp);
-        vista.getPanelInformacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelInformacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("INFORMACION");
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelInformacion().getTablaInformacion().getModel();
         tabla.setRowCount(0);
@@ -214,7 +214,7 @@ public class ControladorMB {
 
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
         tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), resultado});
-        vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
         for (Patrocinio patrocinio : new ArrayList<>(patrocinios.getPatrocinios())){
@@ -242,7 +242,7 @@ public class ControladorMB {
             }
             vista.mostrarInformacion("Sueldos cobrados: $"+sueldos, "INFORMACION IMPORTANTE");
         }
-        vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         revisarDerrota(emp);
         revisarVictoria(club, emp);
     }
@@ -263,7 +263,7 @@ public class ControladorMB {
     
     public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club){
         revisarDerrota(emp);
-        vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         Random rand = new Random();
         int numAleatorio1 = 0;
         int numAleatorio2 = 0;
@@ -312,13 +312,13 @@ public class ControladorMB {
     public void modificar(Empresario emp){
         revisarDerrota(emp);
         ListarJugadores(club);
-        vista.getPanelModificacionJugadores().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelModificacionJugadores().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("MODIFICAR CLUB");
     }
     
     public void opciones(){
         revisarDerrota(emp);
-        vista.getPanelOpciones().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelOpciones().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("OPCIONES");
     }
     
@@ -330,7 +330,7 @@ public class ControladorMB {
 
     private void ficharJugador(ListaFichajes fichajes, Empresario emp){
         revisarDerrota(emp);
-        vista.getPanelFichaje().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelFichaje().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("FICHAJE");
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
         tabla.setRowCount(0);
@@ -339,7 +339,7 @@ public class ControladorMB {
                              futbolista.getRendimiento(), futbolista.getSueldo()};
             tabla.addRow(fila);
         }
-        vista.getPanelFichaje().getBtnFichar().addActionListener(e->{ //INICIO LISTENER (TERMINADO EN LINEA 351)
+        vista.getPanelFichaje().getBtnFichar().addActionListener(e->{ //INICIO LISTENER (TERMINADO EN LINEA 365)
         int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador disponible para fichar.", "Fichaje");
@@ -362,7 +362,7 @@ public class ControladorMB {
         club.agregarJugador(jugador);
         fichajes.borrarFutbolista(jugador);
         revisarDerrota(emp);
-        }); //FINAL LISTENER (INICIADO EN lÍNEA 328)
+        }); //FINAL LISTENER (INICIADO EN lÍNEA 342)
         vista.mostrarPantalla("FICHAJE");
     }
 
@@ -557,14 +557,14 @@ public class ControladorMB {
         DefaultTableModel tabla = (DefaultTableModel) vista.getInformacionRivales().getTablaRivales().getModel();
         tabla.setRowCount(0);
         for(Club club: clubes.getClubes()){
-            tabla.addRow(new Object[]{club.getNombre(), club.getPartidosJugados(), club.getPartidosGanados(), club.getRendimiento()});
+            tabla.addRow(new Object[]{club.getNombre(), club.getPartidosJugados(), club.getRendimiento()});
         }
     }
 
     public void informacionRivales(ListaClubes clubes, Empresario emp){
         revisarDerrota(emp);
         listarRivales(clubes);
-        vista.getInformacionRivales().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getInformacionRivales().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("INFORMACION RIVALES");
     }
 
@@ -575,7 +575,7 @@ public class ControladorMB {
 
     public void revisarVictoria(Club club, Empresario emp){
         revisarDerrota(emp);
-        vista.getPanelVictoria().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelVictoria().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         if (club.getPartidosJugados()>=15)
             vista.mostrarPantalla("VICTORIA");
     }
