@@ -19,10 +19,9 @@ public class MONEYBALL {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         VisualizadorMB vista = new VisualizadorMB(); 
-        Empresario emp = new Empresario("", 100000, 0);
-        Club club = new Club("", 45, 0, 0, "", 0, 0, 0);
+        Empresario emp = new Empresario("", 1000000, 0);
+        Club club = new Club("", 54, 0, 0, "", 0, 0, 0);
         ControladorMB c = new ControladorMB(vista, emp, club);
         java.awt.EventQueue.invokeLater(() -> vista.setVisible(true));
     }

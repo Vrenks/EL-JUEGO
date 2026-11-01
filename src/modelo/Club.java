@@ -22,6 +22,7 @@ public class Club {
     private int camisetasVendidas;
     private int entradasVendidas;
     private int CantidadPatrocinadores;
+    private boolean enfrentado;
     private ArrayList<Futbolista> jugadores;
 
     public Club(String nombre, int rendimiento, int PartidosGanados, int partidosJugados, String dificultad, int camisetasVendidas, int entradasVendidas, int CantidadPatrocinadores) {
@@ -37,6 +38,7 @@ public class Club {
         this.setEntradasVendidas(entradasVendidas);
         this.setCantidadPatrocinadores(CantidadPatrocinadores);
         this.jugadores = new ArrayList<>();
+        this.enfrentado = false;
     }
 
     public String getNombre() {
@@ -142,6 +144,14 @@ public class Club {
                 return futbolista;     
         }
         return null;
+    }
+
+    public boolean isEnfrentado() {
+        return enfrentado;
+    }
+
+    public void setEnfrentado(boolean enfrentado) {
+        this.enfrentado = enfrentado;
     }
 
     
