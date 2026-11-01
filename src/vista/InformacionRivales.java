@@ -155,9 +155,19 @@ public class InformacionRivales extends javax.swing.JPanel {
     public void setTablaRivales(JTable TablaRivales) {
         this.TablaRivales = TablaRivales;
     }
-    
-    
-    
+
+    public javax.swing.JLabel getLblPuntuacion() {
+        return LblPuntuacion;
+    }
+
+    public void setLblPuntuacion(javax.swing.JLabel lblPuntuacion) {
+        LblPuntuacion = lblPuntuacion;
+    }
+
+
+
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnVolver;
