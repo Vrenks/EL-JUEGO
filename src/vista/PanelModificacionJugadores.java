@@ -5,6 +5,7 @@
 package vista;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  *
@@ -30,15 +31,22 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         BtnModificacionAGestion = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        BtnModificacionAFichaje = new javax.swing.JButton();
-        BtnModificacionACambiarJugador = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaJugadores = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        BtnModificacionAFichaje = new javax.swing.JButton();
+        BtnModificacionACambiarJugador = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        LblPuntuacion = new javax.swing.JLabel();
 
         BtnModificacionAGestion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnModificacionAGestion.setText("Volver");
+
+        jLabel1.setFont(new java.awt.Font("Netflix Sans", 0, 20)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 153, 255));
+        jLabel1.setText("Modificar a los jugadores");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -47,24 +55,24 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BtnModificacionAGestion)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(BtnModificacionAGestion)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnModificacionAGestion)
+                    .addComponent(jLabel1))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        BtnModificacionAFichaje.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
-        BtnModificacionAFichaje.setText("Fichar jugador");
-
-        BtnModificacionACambiarJugador.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
-        BtnModificacionACambiarJugador.setText("Despedir jugador");
-
         TablaJugadores.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
+            new Object [][] {
+
+            },
             new String [] {
                 "Nombre", "Dorsal", "Posición", "Rendimiento", "Sueldo"
             }
@@ -84,7 +92,14 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        TablaJugadores.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(TablaJugadores);
+
+        BtnModificacionAFichaje.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        BtnModificacionAFichaje.setText("Fichar jugador");
+
+        BtnModificacionACambiarJugador.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
+        BtnModificacionACambiarJugador.setText("Despedir jugador");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -95,7 +110,7 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                 .addComponent(BtnModificacionAFichaje)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BtnModificacionACambiarJugador)
-                .addGap(14, 14, 14))
+                .addGap(126, 126, 126))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,9 +121,29 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                 .addGap(0, 41, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Netflix Sans", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(153, 153, 255));
-        jLabel1.setText("Modificar a los jugadores");
+        jLabel2.setText("Puntuación: ");
+
+        LblPuntuacion.setText("placeHolder");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LblPuntuacion))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(LblPuntuacion))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -117,13 +152,15 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addGap(82, 82, 82))
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -132,9 +169,9 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -168,6 +205,15 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
     public javax.swing.JTable getTablaJugadores() {
         return TablaJugadores;
     }
+
+    public JLabel getLblPuntuacion() {
+        return LblPuntuacion;
+    }
+
+    public void setLblPuntuacion(JLabel LblPuntuacion) {
+        this.LblPuntuacion = LblPuntuacion;
+    }
+    
     
     
 
@@ -175,10 +221,13 @@ public class PanelModificacionJugadores extends javax.swing.JPanel {
     private javax.swing.JButton BtnModificacionACambiarJugador;
     private javax.swing.JButton BtnModificacionAFichaje;
     private javax.swing.JButton BtnModificacionAGestion;
+    private javax.swing.JLabel LblPuntuacion;
+    private javax.swing.JTable TablaJugadores;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable TablaJugadores;
     // End of variables declaration//GEN-END:variables
 }

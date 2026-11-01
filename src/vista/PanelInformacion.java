@@ -5,6 +5,7 @@
 package vista;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 
 /**
@@ -31,13 +32,20 @@ public class PanelInformacion extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         BtnInformacionAGestion = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaInformacion = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        LblPuntuacion = new javax.swing.JLabel();
 
         BtnInformacionAGestion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         BtnInformacionAGestion.setText("Volver");
+
+        jLabel1.setFont(new java.awt.Font("Netflix Sans", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 153, 255));
+        jLabel1.setText("Información club");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -46,14 +54,18 @@ public class PanelInformacion extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(BtnInformacionAGestion)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(BtnInformacionAGestion)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(BtnInformacionAGestion))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         TablaInformacion.setModel(new javax.swing.table.DefaultTableModel(
@@ -105,9 +117,29 @@ public class PanelInformacion extends javax.swing.JPanel {
                 .addContainerGap(56, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Netflix Sans", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(153, 153, 255));
-        jLabel1.setText("Información club");
+        jLabel2.setText("Puntuación: ");
+
+        LblPuntuacion.setText("placeHolder");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LblPuntuacion))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(LblPuntuacion))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -118,8 +150,9 @@ public class PanelInformacion extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -128,8 +161,8 @@ public class PanelInformacion extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -151,6 +184,14 @@ public class PanelInformacion extends javax.swing.JPanel {
     public void setTablaInformacion(JTable TablaInformacion) {
         this.TablaInformacion = TablaInformacion;
     }
+
+    public JLabel getLblPuntuacion() {
+        return LblPuntuacion;
+    }
+
+    public void setLblPuntuacion(JLabel LblPuntuacion) {
+        this.LblPuntuacion = LblPuntuacion;
+    }
     
     
     
@@ -158,10 +199,13 @@ public class PanelInformacion extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnInformacionAGestion;
+    private javax.swing.JLabel LblPuntuacion;
     private javax.swing.JTable TablaInformacion;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
