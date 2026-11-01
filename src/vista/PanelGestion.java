@@ -261,9 +261,19 @@ public class PanelGestion extends javax.swing.JPanel {
     public void setLblPuntuacion(JLabel LblPuntuacion) {
         this.LblPuntuacion = LblPuntuacion;
     }
-    
-    
-    
+
+    public javax.swing.JButton getBtnRivales() {
+        return BtnRivales;
+    }
+
+    public void setBtnRivales(javax.swing.JButton btnRivales) {
+        BtnRivales = btnRivales;
+    }
+
+
+
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnGestionACreacion;
