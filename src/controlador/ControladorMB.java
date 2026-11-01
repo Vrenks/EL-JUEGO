@@ -40,8 +40,9 @@ public class ControladorMB {
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->vista.mostrarPantalla("CREACION"));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, patrocinios, fichajes);
                                                                                 gestionar(emp);});
+        ListaClubes clubesCopia = clubes;
         
-        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes, emp));
+        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar(emp));
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
         vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club, emp));
@@ -50,7 +51,7 @@ public class ControladorMB {
         vista.getInformacionRivales().getBtnVolver().addActionListener(e->gestionar(emp));
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes, emp));
+        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
         //vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio(patrocinios, emp, club));
         
         
@@ -177,16 +178,16 @@ public class ControladorMB {
         }
     }
     
-    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, Empresario emp){
+    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubesCopia, ListaClubes clubes, Empresario emp){
         Random rivalRand = new Random();
         boolean bucle = true;
-        Club rival = clubes.getClubes().get(rivalRand.nextInt(15));
+        Club rival = clubesCopia.getClubes().get(rivalRand.nextInt(clubesCopia.getCantidad()));
         while (bucle){
             if (!rival.isEnfrentado()){
                 break;
             }else {
                 Random rivalRand2 = new Random();
-                rival = clubes.getClubes().get(rivalRand2.nextInt(15));
+                rival = clubesCopia.getClubes().get(rivalRand2.nextInt(clubesCopia.getCantidad()));
             }    
         }
         Random rand = new Random();
@@ -204,11 +205,17 @@ public class ControladorMB {
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
             ventasRendimiento(diferenciaGoles*-1, club, emp);
+            rival.setPartidosGanados(rival.getPartidosGanados()+1);
         }
         else{ 
             diferenciaGoles = 0;
             resultado = "Empate: 0-0";
         }
+        rival.setPartidosJugados(rival.getPartidosJugados()+1);
+        Club rivalNoCopia = clubes.buscarclub(rival.getNombre());
+        rivalNoCopia = rival;
+        clubesCopia.borrarClub(rival);
+
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
         tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), resultado});
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));;

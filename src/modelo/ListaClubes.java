@@ -17,4 +17,23 @@ public class ListaClubes {
         clubes.add(club);
     }
 
+    public void borrarClub(Club club){
+        clubes.remove(club);
+    }
+
+    public Club buscarclub(String nombre){
+        for (Club club: clubes){
+            if (nombre.equals(club.getNombre()))
+                return club;
+        }
+        return null;
+    }
+
+    public int getCantidad(){
+        int contador = 0;
+        for (Club club: clubes)
+            contador++;
+        return contador;
+    }
+
 }
