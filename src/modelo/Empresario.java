@@ -52,15 +52,6 @@ public class Empresario {
         this.moralidad = moralidad;
     }
     
-    public void elegirPatrocinio(){
-        
-    }
-    
-    public void ficharJugador(){
-        
-    }
-    
-    
 
     
     

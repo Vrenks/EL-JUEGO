@@ -5,10 +5,16 @@
 package controlador;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -84,6 +90,81 @@ public class ControladorMB {
         
         
     }
+
+    public void continuarPartida(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo){
+        try {
+            cargarArchivo(emp, club, clubes, clubesCopia, patrocinios, fichajes, nombreArchivo);
+        } catch (Exception e) {
+            vista.mostrarError(e.getMessage(), "ERROR DE CARGA");
+        }
+        
+    }
+
+    public void cargarArchivo(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo) throws IOException{
+        File f = new File(nombreArchivo);
+        if (!f.exists())
+            throw new IllegalArgumentException("ERROR: archivo '"+nombreArchivo+"' no encontrado o no se pudo abrir.");
+        try(BufferedReader br = new BufferedReader(new FileReader(f))){
+            String [] linea1 = br.readLine().split(";"); 
+            String [] linea2 = br.readLine().split(";"); 
+            String [] linea3 = br.readLine().split(";"); 
+            String [] linea4 = br.readLine().split(";"); 
+            String [] linea5 = br.readLine().split(";"); 
+            String [] linea6 = br.readLine().split(";"); 
+            String [] linea7 = br.readLine().split(";"); 
+
+            String nombreEmpresario = linea1[0];
+            String nombreClub = linea2[0];
+            int rendimiento = Integer.parseInt(linea2[1]);
+            int partidosGanados = Integer.parseInt(linea2[2]);
+            int partidosJugados = Integer.parseInt(linea2[3]);
+            int camisetasVendidas = Integer.parseInt(linea2[4]);
+            int entradasVendidas = Integer.parseInt(linea2[5]);
+            int cantidadPatrocinadores = Integer.parseInt(linea2[5]);
+            int dorsales[] = new int[linea3.length];
+            for (int i = 0; i<linea3.length; i++){
+                dorsales[i]=Integer.parseInt(linea3[i]);
+            }
+            String nombrePatrocinadores[] = new String[linea4.length/3];
+            int partidosRestantes[] = new int[linea4.length/3];
+            boolean asociacion[] = new boolean[linea4.length/3];
+            for (int i = 0; i<linea4.length; i+=3){
+                nombrePatrocinadores[i]=linea4[i];
+                partidosRestantes[i]=Integer.parseInt(linea4[i+1]);
+                asociacion[i]=Boolean.parseBoolean(linea4[i+2]);
+            }
+            int moralidad = Integer.parseInt(linea5[0]);
+            int puntuacion = Integer.parseInt(linea6[0]);
+            int rivalesJugados[]= new int[15];
+            for (int i = 0; i<15; i++){
+                rivalesJugados[i]=Integer.parseInt(linea7[i]);
+            }
+            
+
+            opcionesFichaje(nombreClub, fichajes);
+            crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
+
+            emp = new Empresario(nombreEmpresario, puntuacion, moralidad);
+            club = new Club(nombreClub, rendimiento, partidosGanados, partidosJugados, nombreClub, camisetasVendidas, entradasVendidas, cantidadPatrocinadores);
+            for (int i = 0; i<linea3.length; i++){
+                club.agregarJugador(club.buscarJugadorDorsal(dorsales[i]));
+            }
+            for (int i = 0; i<cantidadPatrocinadores; i++){
+                if (partidosRestantes[i]<=0)
+                    patrocinios.borrarPatrocinio(patrocinios.buscarPatrocinio(nombrePatrocinadores[i]));
+                if (asociacion[i])
+                    patrocinios.buscarPatrocinio(nombrePatrocinadores[i]).setAsociado(true);
+            }
+            for (int i = 0; i<15; i++){
+                if (rivalesJugados[i]==1){
+                    clubes.getClubes().get(i).setPartidosJugados(rivalesJugados[i]);
+                    clubesCopia.borrarClub(clubes.getClubes().get(i));
+                }
+            }
+
+        }
+    }
+    
     
     public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText().trim();
@@ -393,7 +474,7 @@ public class ControladorMB {
         }
         Futbolista jugador = new Futbolista(datos[0].toString(),((Number) datos[1]).intValue(),
                                             datos[2].toString(),((Number) datos[3]).intValue(),((Number) datos[4]).doubleValue());
-        if (club.buscarJugador(jugador.getNombre()) != null){
+        if (club.buscarJugadorNombre(jugador.getNombre()) != null){
             vista.mostrarInformacion("Ese jugador ya forma parte del club.", "Fichaje");
             return;
         }
@@ -409,8 +490,8 @@ public class ControladorMB {
             vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
         }
         //validacion limite de rendimiento del cluc
-        if((club.calcularRendimientoTotal()+jugador.getRendimiento()) > 65 ){
-            vista.mostrarError("El club no puede superar los 65 puntos de rendimienti","Limite de equipo");
+        if(club.getJugadores().size()>11){
+            vista.mostrarError("El club no puede superar los 11 jugadores","Limite de equipo");
             return;
         }
         club.agregarJugador(jugador);
@@ -438,7 +519,7 @@ public class ControladorMB {
 
         int filaModelo = tabla.convertRowIndexToModel(fila);
         String nombreJugador = tabla.getModel().getValueAt(filaModelo, 0).toString();
-        Futbolista jugador = club.buscarJugador(nombreJugador);
+        Futbolista jugador = club.buscarJugadorNombre(nombreJugador);
         if (jugador == null){
             vista.mostrarError("No se encontró el jugador seleccionado en el club.", "Error");
             ListarJugadores(club);

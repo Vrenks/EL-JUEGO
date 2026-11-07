@@ -76,10 +76,5 @@ public class Futbolista {
         }
         
     }
-    /* 
-    public void meterGol() {
-        this.rendimiento += 5;
-    }
-        */
-
+ 
 }

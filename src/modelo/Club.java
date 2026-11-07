@@ -90,23 +90,6 @@ public class Club {
         } 
     }
 
-    /* 
-    public int getAficion() {
-        return aficion;
-    }
-
-    public void setAficion(int aficion) {
-        this.aficion = aficion;
-    }
-
-    public int getranking() {
-        return ranking;
-    }
-
-    public void setranking(int ranking) {
-        this.ranking = ranking;
-    }
-    */ 
     public String getDificultad() {
         return dificultad;
     }
@@ -169,9 +152,17 @@ public class Club {
         
     }
 
-    public Futbolista buscarJugador(String nombre){
+    public Futbolista buscarJugadorNombre(String nombre){
         for (Futbolista futbolista: jugadores){
             if (futbolista.getNombre().equals(nombre))
+                return futbolista;     
+        }
+        return null;
+    }
+
+    public Futbolista buscarJugadorDorsal(int dorsal){
+        for (Futbolista futbolista: jugadores){
+            if (futbolista.getDorsal()==dorsal)
                 return futbolista;     
         }
         return null;
