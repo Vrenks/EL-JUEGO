@@ -8,6 +8,7 @@ package controlador;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -350,17 +351,28 @@ public class ControladorMB {
 
     }
 
-    private void ficharJugador(ListaFichajes fichajes, Empresario emp){
-        revisarDerrota(emp);
-        vista.getPanelFichaje().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
-        vista.mostrarPantalla("FICHAJE");
-        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
+    public void limpiarTabla(DefaultTableModel tabla){
         tabla.setRowCount(0);
+    }
+
+    public void listarFichajes(ListaFichajes fichajes){
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
+        limpiarTabla(tabla);
         for (Futbolista futbolista : fichajes.getFutbolistas()) {
             Object[] fila = {futbolista.getNombre(), futbolista.getDorsal(), futbolista.getPosicion(), 
                              futbolista.getRendimiento(), futbolista.getSueldo()};
             tabla.addRow(fila);
         }
+        
+    }
+
+
+    public void ficharJugador(ListaFichajes fichajes, Empresario emp){
+        revisarDerrota(emp);
+        vista.getPanelFichaje().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
+        vista.mostrarPantalla("FICHAJE");
+        listarFichajes(fichajes);
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
         // limpia listeners anteriores
         for (java.awt.event.ActionListener al : vista.getPanelFichaje().getBtnFichar().getActionListeners()) {
         vista.getPanelFichaje().getBtnFichar().removeActionListener(al);
@@ -408,11 +420,11 @@ public class ControladorMB {
         revisarDerrota(emp);
         vista.mostrarInformacion("Jugador fichado con exito", "Fichaje exitoso");
         modificar(emp);
+        
         }); //FINAL LISTENER (INICIADO EN lÍNEA 342)
-        vista.mostrarPantalla("FICHAJE");
     }
 
-    private void despedirJugador(){
+    public void despedirJugador(){
         javax.swing.JTable tabla = vista.getPanelCambiarJugador().getTablaCambiar();
         int fila = tabla.getSelectedRow();
         if (fila == -1){
@@ -577,6 +589,7 @@ public class ControladorMB {
     }
 
     public void opcionesFichaje(String nombreClub, ListaFichajes fichajes){
+        fichajes.getFutbolistas().clear();
         Futbolista f1;
         Futbolista f2;
         Futbolista f3;

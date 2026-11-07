@@ -33,8 +33,15 @@ public class ListaFichajes {
     }
 
    public void borrarFutbolista(Futbolista futbolista){
-        if (futbolista != null) {
-            futbolistas.remove(futbolista);
+        if (futbolista != null && futbolista.getNombre() != null) {
+            for (int i = 0; i < futbolistas.size(); i++) {
+                Futbolista disponible = futbolistas.get(i);
+                if (disponible != null && disponible.getNombre() != null
+                        && disponible.getNombre().equalsIgnoreCase(futbolista.getNombre())) {
+                    futbolistas.remove(i);
+                    return;
+                }
+            }
         }
     }
 
