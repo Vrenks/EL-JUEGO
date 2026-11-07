@@ -46,7 +46,10 @@ public class Club {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if(nombre != null && !nombre.trim().isEmpty()){
+            this.nombre = nombre;
+        }
+        
     }
 
     public int getRendimiento(){
@@ -54,23 +57,37 @@ public class Club {
     }
 
     public void setRendimiento(int rendimiento){
-        this.rendimiento = rendimiento;
+        if(rendimiento  > 65){
+        this.rendimiento = 65; //tope maximo del equipo
+        }else if (rendimiento < 0){
+            this.rendimiento = 0; // minimo permitido
+        }else{
+            this.rendimiento = rendimiento; //valor intermedio valido
+        }
+            
+          
     }
+        
 
     public int getPartidosGanados() {
         return PartidosGanados;
     }
-
+    //partidos mayor que 0 y no superaran el totald e partidos
     public void setPartidosGanados(int partidosGanados) {
-        PartidosGanados = partidosGanados;
+        if(partidosGanados >= 0 && partidosGanados <= this.partidosJugados){
+            PartidosGanados = partidosGanados;
+        }
+        
     }
 
     public int getPartidosJugados() {
         return partidosJugados;
     }
-
+     //paritidos mayor que 0 y no puede ser menor que los partidos ganados
     public void setPartidosJugados(int partidosJugados) {
+        if(partidosJugados >= 0 && partidosJugados <= this.PartidosGanados){
         this.partidosJugados = partidosJugados;
+        } 
     }
 
     /* 
@@ -103,7 +120,9 @@ public class Club {
     }
 
     public void setCamisetasVendidas(int camisetasVendidas) {
+        if(camisetasVendidas >= 0){
         this.camisetasVendidas = camisetasVendidas;
+        }  
     }
 
     public int getEntradasVendidas() {
@@ -111,7 +130,9 @@ public class Club {
     }
 
     public void setEntradasVendidas(int entradasVendidas) {
+        if(entradasVendidas >= 0){
         this.entradasVendidas = entradasVendidas;
+        } 
     }
 
     public int getCantidadPatrocinadores() {
@@ -119,7 +140,9 @@ public class Club {
     }
 
     public void setCantidadPatrocinadores(int cantidadPatrocinadores) {
+        if(cantidadPatrocinadores >= 0){
         CantidadPatrocinadores = cantidadPatrocinadores;
+        } 
     }
 
     public ArrayList<Futbolista> getJugadores() {
@@ -129,13 +152,21 @@ public class Club {
     public void setJugadores(ArrayList<Futbolista> jugadores) {
         this.jugadores = jugadores;
     }
-
+    //evitar nulos y duplicados
     public void agregarJugador(Futbolista jugador){
-        jugadores.add(jugador);
+        if(jugador != null && !jugadores.contains(jugador)){
+           jugadores.add(jugador); 
+           this.rendimiento = calcularRendimientoTotal(); //actualiza el atributo rendimiento
+        }
+        
     }
-
+     //verificar existencia
     public void despedirJugador(Futbolista jugador) {
-        jugadores.remove(jugador);
+        if(jugador != null && jugadores.contains(jugador)){
+            jugadores.remove(jugador);
+            this.rendimiento = calcularRendimientoTotal(); //Actualiza el atributo rendimiento
+        }
+        
     }
 
     public Futbolista buscarJugador(String nombre){
@@ -153,26 +184,36 @@ public class Club {
     public void setEnfrentado(boolean enfrentado) {
         this.enfrentado = enfrentado;
     }
-
-    
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-    
-
-
-
-    
+    // metodo para calcualr rendimiento
+   public int calcularRendimientoTotal() {
+    int suma = 0;
+    for (Futbolista f : jugadores) {
+        suma += f.getRendimiento();
+    }
+    return Math.min(suma, 65); // Limita el máximo a 65
 }
+   
+}
+
+    
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+    
+
+
+
+    
+

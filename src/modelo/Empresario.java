@@ -24,7 +24,10 @@ public class Empresario {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if(nombre != null && !nombre.trim().isEmpty()){
+            this.nombre = nombre;
+        }
+        
     }
 
     public int getPuntuacion() {
@@ -32,7 +35,13 @@ public class Empresario {
     }
 
     public void setPuntuacion(int puntuacion) {
-        this.puntuacion = puntuacion;
+        if(puntuacion >= 0){
+            this.puntuacion = puntuacion;
+        }else{
+            this.puntuacion = 0;
+                    
+        }
+        
     }
 
     public int getMoralidad() {

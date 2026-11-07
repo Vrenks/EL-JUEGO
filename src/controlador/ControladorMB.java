@@ -85,7 +85,12 @@ public class ControladorMB {
     }
     
     public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
-        String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText();
+        String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText().trim();
+        //validacion para que el nombre no este vacio
+        if(nombreEmpresario.isEmpty()){
+            vista.mostrarError("El nombre del empresario no puede estar vacio", "Error al crear");
+            return;
+        }
         String dificultad = vista.getPanelCreacion().getBtnElegirDificultad();
         emp.setNombre(nombreEmpresario);
         String nombreClub;
@@ -102,6 +107,8 @@ public class ControladorMB {
         clubBase(club, nombreClub);
         crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
         opcionesFichaje(nombreClub, fichajes);
+        //transicion exitosa
+        gestionar(emp);
     }
 
     public void clubBase(Club club, String nombreClub){
@@ -180,6 +187,17 @@ public class ControladorMB {
     }
     
     public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
+        // si la puntuacion es menor o igual a 0 se bloquea la simulacion
+        if(emp.getPuntuacion() <= 0){
+            revisarDerrota(emp);
+            return;
+        }
+        // si no quedan mas clubes en la copia la temporada termino
+        if(clubesCopia.getCantidad() <= 0){
+            vista.mostrarInformacion("Ya se han disputado todos los partidos de la temporada", "Fin de temporada");
+            revisarVictoria(club,emp);
+            return;
+        }   
         Club rival;
         do{
             Random rivalRand = new Random();
@@ -292,6 +310,10 @@ public class ControladorMB {
         }
         vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->{
             int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
+            //validacion para ver que se haya seleccionado una fila
+            if(fila == -1){
+                vista.mostrarInformacion("Debe seleccionar un patrocinador de la lista","Patrocinios");
+            }
             if (fila!=-1){
                 String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
                 Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
@@ -339,6 +361,10 @@ public class ControladorMB {
                              futbolista.getRendimiento(), futbolista.getSueldo()};
             tabla.addRow(fila);
         }
+        // limpia listeners anteriores
+        for (java.awt.event.ActionListener al : vista.getPanelFichaje().getBtnFichar().getActionListeners()) {
+        vista.getPanelFichaje().getBtnFichar().removeActionListener(al);
+        }
         vista.getPanelFichaje().getBtnFichar().addActionListener(e->{ //INICIO LISTENER (TERMINADO EN LINEA 365)
         int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
@@ -359,9 +385,29 @@ public class ControladorMB {
             vista.mostrarInformacion("Ese jugador ya forma parte del club.", "Fichaje");
             return;
         }
+        //validacion dorsal duplicado
+        for(Futbolista f : club.getJugadores()){
+            if(f.getDorsal() == jugador.getDorsal()){
+                vista.mostrarError("El dorsal # "+ jugador.getDorsal()+"ya esta ocupado","Dorsal en uso" );
+            }
+        }
+           
+        //validacion fondos insuficientes
+        if(emp.getPuntuacion() < jugador.getSueldo()){
+            vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
+        }
+        //validacion limite de rendimiento del cluc
+        if((club.calcularRendimientoTotal()+jugador.getRendimiento()) > 65 ){
+            vista.mostrarError("El club no puede superar los 65 puntos de rendimienti","Limite de equipo");
+            return;
+        }
         club.agregarJugador(jugador);
         fichajes.borrarFutbolista(jugador);
+        //borrado visual de la tabla
+        tabla.removeRow(fila);
         revisarDerrota(emp);
+        vista.mostrarInformacion("Jugador fichado con exito", "Fichaje exitoso");
+        modificar(emp);
         }); //FINAL LISTENER (INICIADO EN lÍNEA 342)
         vista.mostrarPantalla("FICHAJE");
     }
@@ -372,6 +418,10 @@ public class ControladorMB {
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador para despedir.", "Despedir jugador");
             return;
+        }
+        //validacion para que el equipo quede con almenos 7
+        if(club.getJugadores().size() <= 7){
+            vista.mostrarError("No puedes despedir a mas jugadores. Tu plantilla minima debe ser de 7 futbolistas", "Limite de plantilla");
         }
 
         int filaModelo = tabla.convertRowIndexToModel(fila);
@@ -579,5 +629,6 @@ public class ControladorMB {
         if (club.getPartidosJugados()>=15)
             vista.mostrarPantalla("VICTORIA");
     }
-
+    
+    
 }

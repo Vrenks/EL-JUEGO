@@ -30,31 +30,51 @@ public class Futbolista {
         return nombre;
     }
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if(nombre != null && !nombre.trim().isEmpty()){
+           this.nombre = nombre; 
+        }
+        
     }
     public int getDorsal() {
         return dorsal;
     }
     public void setDorsal(int dorsal) {
-        this.dorsal = dorsal;
+        if(dorsal > 0){
+            this.dorsal = dorsal;
+        }
+        
     }
     public String getPosicion() {
         return posicion;
     }
     public void setPosicion(String posicion) {
-        this.posicion = posicion;
+        if(posicion != null && !posicion.trim().isEmpty()){
+            this.posicion = posicion;
+        }
+        
     }
     public int getRendimiento() {
         return rendimiento;
     }
+    //validacion limites del rendimento del jugador de 1 a 10
     public void setRendimiento(int rendimiento) {
-        this.rendimiento = rendimiento;
+        if(rendimiento >= 1 && rendimiento <= 10){
+           this.rendimiento = rendimiento;
+        }else if(rendimiento > 10){
+            this.rendimiento = 10;
+        }else{
+            this.rendimiento = 1;
+        }
+        
     }
     public double getSueldo() {
         return sueldo;
     }
     public void setSueldo(double sueldo) {
-        this.sueldo = sueldo;
+        if(sueldo >= 0){
+            this.sueldo = sueldo;
+        }
+        
     }
     /* 
     public void meterGol() {

@@ -29,9 +29,10 @@ public class Patrocinio {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            this.nombre = nombre.trim();
+        }
     }
-
     public int getMoralidad() {
         return moralidad;
     }
@@ -44,8 +45,13 @@ public class Patrocinio {
         return inversion;
     }
 
-    public void setInversion(int inversion) {
-        this.inversion = inversion;
+   public void setInversion(int inversion) {
+        // Validación: La inversión económica no puede ser un número negativo
+        if (inversion >= 0) {
+            this.inversion = inversion;
+        } else {
+            this.inversion = 0;
+        }
     }
 
     public int getPartidosRestantes() {
@@ -53,7 +59,12 @@ public class Patrocinio {
     }
 
     public void setPartidosRestantes(int partidosRestantes) {
-        this.partidosRestantes = partidosRestantes;
+        // Validación: Los partidos restantes del contrato no pueden bajar de 0
+        if (partidosRestantes >= 0) {
+            this.partidosRestantes = partidosRestantes;
+        } else {
+            this.partidosRestantes = 0;
+        }
     }
 
     public boolean isAsociado() {
