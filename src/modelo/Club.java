@@ -139,7 +139,7 @@ public class Club {
     public void agregarJugador(Futbolista jugador){
         if(jugador != null && !jugadores.contains(jugador)){
            jugadores.add(jugador); 
-           //this.rendimiento = calcularRendimientoTotal(); //actualiza el atributo rendimiento
+           this.rendimiento = calcularRendimientoTotal(); 
         }
         
     }
@@ -147,7 +147,7 @@ public class Club {
     public void despedirJugador(Futbolista jugador) {
         if(jugador != null && jugadores.contains(jugador)){
             jugadores.remove(jugador);
-            //this.rendimiento = calcularRendimientoTotal(); //Actualiza el atributo rendimiento
+            this.rendimiento = calcularRendimientoTotal(); 
         }
         
     }
@@ -181,7 +181,7 @@ public class Club {
     for (Futbolista f : jugadores) {
         suma += f.getRendimiento();
     }
-    return Math.min(suma, 65); // Limita el máximo a 65
+    return Math.min(suma, 70); // Limita el máximo a 70
 }
    
 }
