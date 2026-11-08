@@ -168,39 +168,50 @@ public class ControladorMB {
             club.setEntradasVendidas(entradasVendidas);
             club.setCantidadPatrocinadores(cantidadPatrocinadores);
             club.setDificultad(nombreClub);
-
-            int flag = 0;
             for (Futbolista futbolista: club.getJugadores()){
-                flag=0;
-                for (int i = 0; i<linea3.length; i++){
-                    if (futbolista.getDorsal()==dorsales[i])
-                        flag=1;
-                }
-                if (flag==0)
+                for (int i = 0; i<dorsales.length; i++){
+                    if (futbolista.getDorsal()==dorsales[i]){
+                        continue;
+                    }else if (fichajes.buscarJugadorDorsal(dorsales[i])!=null){
+                        club.agregarJugador(fichajes.buscarJugadorDorsal(dorsales[i]));
+                        club.setRendimiento(club.getRendimiento()+fichajes.buscarJugadorDorsal(dorsales[i]).getRendimiento());
+                        fichajes.borrarFutbolista(fichajes.buscarJugadorDorsal(dorsales[i]));
+                        continue;
+                    }
                     club.despedirJugador(futbolista);
+                } 
             }
-            for (int i = 0; i<linea3.length; i++){
-                if (dorsales[i]>=10){
-                    Futbolista temp = fichajes.buscarJugadorDorsal(dorsales[i]);
-                    club.agregarJugador(temp);
-                    fichajes.borrarFutbolista(temp);
-                    club.setRendimiento(club.getRendimiento()+temp.getRendimiento());
+
+            for (Patrocinio p : new ArrayList<>(patrocinios.getPatrocinios())){
+                int indice = -1;
+                for (int i = 0; i < nombrePatrocinadores.length; i++){
+                    if (p.getNombre().equalsIgnoreCase(nombrePatrocinadores[i])){
+                        indice = i;
+                        break;
+                    }
                 }
-            }
-            for (int i = 0; i<nombrePatrocinadores.length; i++){
-                if (partidosRestantes[i]<=0)
-                    patrocinios.borrarPatrocinio(patrocinios.buscarPatrocinio(nombrePatrocinadores[i]));
-                if (asociacion[i])
-                    patrocinios.buscarPatrocinio(nombrePatrocinadores[i]).setAsociado(true);
-                patrocinios.getPatrocinios().get(i).setPartidosRestantes(partidosRestantes[i]);
-            }
-            for (int i = 0; i<15; i++){
-                if (rivalesJugados[i]==1){
-                    clubes.getClubes().get(i).setPartidosJugados(rivalesJugados[i]);
-                    clubesCopia.borrarClub(clubes.getClubes().get(i));
+                if (indice == -1 || partidosRestantes[indice] <= 0){
+                    patrocinios.borrarPatrocinio(p);
+                }else{
+                    p.setPartidosRestantes(partidosRestantes[indice]);
+                    p.setAsociado(asociacion[indice]);
                 }
             }
 
+            for (int i = 0; i<15; i++){
+                Club temp = clubes.getClubes().get(i);
+                int jugados = rivalesJugados[i];
+                temp.setPartidosJugados(jugados);
+                if (jugados == 1){
+                    for (int j = 0; j < clubesCopia.getClubes().size(); j++){
+                        Club copia = clubesCopia.getClubes().get(j);
+                        if (copia.getNombre().equalsIgnoreCase(temp.getNombre())){
+                            clubesCopia.borrarClub(copia);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -335,7 +346,6 @@ public class ControladorMB {
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
             ventasRendimiento(diferenciaGoles*-1, club, emp);
-            //rival.setPartidosGanados(rival.getPartidosGanados()+1);
         }
         else{ 
             diferenciaGoles = 0;
