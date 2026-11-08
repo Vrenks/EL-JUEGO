@@ -31,7 +31,6 @@ public class PanelPatrocinios extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        BtnPatrociniosAGestion = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -40,9 +39,6 @@ public class PanelPatrocinios extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaPatrocinadores = new javax.swing.JTable();
         BtnElegirPatrocinador = new javax.swing.JButton();
-
-        BtnPatrociniosAGestion.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
-        BtnPatrociniosAGestion.setText("Volver");
 
         jLabel1.setFont(new java.awt.Font("Netflix Sans", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 153, 255));
@@ -78,9 +74,7 @@ public class PanelPatrocinios extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(BtnPatrociniosAGestion)
-                .addGap(44, 44, 44)
+                .addGap(123, 123, 123)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -92,9 +86,7 @@ public class PanelPatrocinios extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(BtnPatrociniosAGestion)
-                        .addComponent(jLabel1)))
+                    .addComponent(jLabel1))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -171,14 +163,6 @@ public class PanelPatrocinios extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnElegirPatrocinadorActionPerformed
 
-    public JButton getBtnPatrociniosAGestion() {
-        return BtnPatrociniosAGestion;
-    }
-
-    public void setBtnPatrociniosASimulacion(JButton BtnPatrociniosASimulacion) {
-        this.BtnPatrociniosAGestion = BtnPatrociniosASimulacion;
-    }
-
     public JButton getBtnElegirPatrocinador() {
         return BtnElegirPatrocinador;
     }
@@ -210,7 +194,6 @@ public class PanelPatrocinios extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnElegirPatrocinador;
-    private javax.swing.JButton BtnPatrociniosAGestion;
     private javax.swing.JLabel LblPuntuacion2;
     private javax.swing.JTable TablaPatrocinadores;
     private javax.swing.JLabel jLabel1;

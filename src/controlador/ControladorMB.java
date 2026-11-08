@@ -87,8 +87,6 @@ public class ControladorMB {
        
         vista.getPanelInformacion().getBtnInformacionAGestion().addActionListener(e->gestionar(emp));
         
-        vista.getPanelPatrocinios().getBtnPatrociniosAGestion().addActionListener(e->gestionar(emp));
-        
         vista.getPanelFichaje().getBtnFichajeAModificacion().addActionListener(e->modificar(emp));
         
         vista.getPanelCambiarJugador().getBtnCambiarJugadorAModificacion().addActionListener(e->modificar(emp));
