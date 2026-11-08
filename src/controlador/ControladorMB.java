@@ -182,9 +182,9 @@ public class ControladorMB {
             for (int i = 0; i<linea3.length; i++){
                 if (dorsales[i]>=10){
                     Futbolista temp = fichajes.buscarJugadorDorsal(dorsales[i]);
-                    club.setRendimiento(club.getRendimiento()+temp.getRendimiento());
                     club.agregarJugador(temp);
                     fichajes.borrarFutbolista(temp);
+                    club.setRendimiento(club.getRendimiento()+temp.getRendimiento());
                 }
             }
             for (int i = 0; i<nombrePatrocinadores.length; i++){
