@@ -171,6 +171,7 @@ public class ControladorMB {
 
             int flag = 0;
             for (Futbolista futbolista: club.getJugadores()){
+                flag=0;
                 for (int i = 0; i<linea3.length; i++){
                     if (futbolista.getDorsal()==dorsales[i])
                         flag=1;
@@ -186,11 +187,12 @@ public class ControladorMB {
                     fichajes.borrarFutbolista(temp);
                 }
             }
-            for (int i = 0; i<cantidadPatrocinadores; i++){
+            for (int i = 0; i<nombrePatrocinadores.length; i++){
                 if (partidosRestantes[i]<=0)
                     patrocinios.borrarPatrocinio(patrocinios.buscarPatrocinio(nombrePatrocinadores[i]));
                 if (asociacion[i])
                     patrocinios.buscarPatrocinio(nombrePatrocinadores[i]).setAsociado(true);
+                patrocinios.getPatrocinios().get(i).setPartidosRestantes(partidosRestantes[i]);
             }
             for (int i = 0; i<15; i++){
                 if (rivalesJugados[i]==1){
@@ -514,12 +516,14 @@ public class ControladorMB {
         for(Futbolista f : club.getJugadores()){
             if(f.getDorsal() == jugador.getDorsal()){
                 vista.mostrarError("El dorsal # "+ jugador.getDorsal()+"ya esta ocupado","Dorsal en uso" );
+                return;
             }
         }
            
         //validacion fondos insuficientes
         if(emp.getPuntuacion() < jugador.getSueldo()){
             vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
+            return;
         }
         //validacion limite de rendimiento del cluc
         if(club.getJugadores().size()>11){

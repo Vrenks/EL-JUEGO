@@ -139,7 +139,7 @@ public class Club {
     public void agregarJugador(Futbolista jugador){
         if(jugador != null && !jugadores.contains(jugador)){
            jugadores.add(jugador); 
-           this.rendimiento = calcularRendimientoTotal(); //actualiza el atributo rendimiento
+           //this.rendimiento = calcularRendimientoTotal(); //actualiza el atributo rendimiento
         }
         
     }
@@ -147,7 +147,7 @@ public class Club {
     public void despedirJugador(Futbolista jugador) {
         if(jugador != null && jugadores.contains(jugador)){
             jugadores.remove(jugador);
-            this.rendimiento = calcularRendimientoTotal(); //Actualiza el atributo rendimiento
+            //this.rendimiento = calcularRendimientoTotal(); //Actualiza el atributo rendimiento
         }
         
     }

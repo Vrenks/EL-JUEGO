@@ -32,8 +32,11 @@ public class ListaClubes {
     }
 
     public void borrarClub(Club club){
-        if (club != null) {
-            clubes.remove(club);
+        for (Club c: clubes){
+            if (c.getNombre().equals(club.getNombre())){
+                clubes.remove(club);
+                return;
+            }
         }
     }
      // proteccion contra nulos
