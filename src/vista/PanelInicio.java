@@ -126,8 +126,17 @@ public class PanelInicio extends javax.swing.JPanel {
         this.BtnIniciarPartida.addActionListener(listener);
     }
     
-    
-    
+    public JButton getBtnContinuarPartida() {
+        return BtnContinuarPartida;
+    }
+
+    public void setBtnContinuarPartida(JButton btnContinuarPartida) {
+        BtnContinuarPartida = btnContinuarPartida;
+    }
+
+
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnContinuarPartida;
     private javax.swing.JButton BtnIniciarPartida;

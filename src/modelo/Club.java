@@ -85,7 +85,7 @@ public class Club {
     }
      //paritidos mayor que 0 y no puede ser menor que los partidos ganados
     public void setPartidosJugados(int partidosJugados) {
-        if(partidosJugados >= 0 && partidosJugados <= this.PartidosGanados){
+        if(partidosJugados >= 0 && partidosJugados >= this.PartidosGanados){
         this.partidosJugados = partidosJugados;
         } 
     }

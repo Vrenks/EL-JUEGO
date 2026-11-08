@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -45,6 +48,10 @@ public class ControladorMB {
         ListaFichajes fichajes = new ListaFichajes();
         ListaClubes clubesCopia = new ListaClubes();
         
+        vista.getPanelInicio().getBtnContinuarPartida().addActionListener(e->{
+            continuarPartida(emp, club, clubes, clubesCopia, patrocinios, fichajes, "memoryCard.txt");
+            gestionar(emp);
+        });
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->vista.mostrarPantalla("CREACION"));
         vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, clubesCopia, patrocinios, fichajes);
                                                                                 gestionar(emp);});
@@ -60,7 +67,7 @@ public class ControladorMB {
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar(emp));
         vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
-        //vista.getPanelSimulacion().getBtnSimulacionAPatrocinios().addActionListener(e->patrocinio(patrocinios, emp, club));
+        
         
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar(emp));
@@ -70,7 +77,13 @@ public class ControladorMB {
         vista.getPanelCambiarJugador().getBtnCambiar().addActionListener(e->despedirJugador());
         
         vista.getPanelOpciones().getBtnOpcionesAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelOpciones().getBtnGuardarYSalir().addActionListener(e->System.exit(0));
+        vista.getPanelOpciones().getBtnGuardarYSalir().addActionListener(e->{try {guardarPartida(emp, club, clubes, patrocinios, fichajes, "memoryCard.txt");
+                                                                                  System.exit(0);
+            } catch (IOException e1) {
+            e1.printStackTrace();
+            }
+        });
+           
         vista.getPanelOpciones().getBtnSalirSinGuardar().addActionListener(e->System.exit(0));
        
         vista.getPanelInformacion().getBtnInformacionAGestion().addActionListener(e->gestionar(emp));
@@ -120,7 +133,7 @@ public class ControladorMB {
             int partidosJugados = Integer.parseInt(linea2[3]);
             int camisetasVendidas = Integer.parseInt(linea2[4]);
             int entradasVendidas = Integer.parseInt(linea2[5]);
-            int cantidadPatrocinadores = Integer.parseInt(linea2[5]);
+            int cantidadPatrocinadores = Integer.parseInt(linea2[6]);
             int dorsales[] = new int[linea3.length];
             for (int i = 0; i<linea3.length; i++){
                 dorsales[i]=Integer.parseInt(linea3[i]);
@@ -129,9 +142,10 @@ public class ControladorMB {
             int partidosRestantes[] = new int[linea4.length/3];
             boolean asociacion[] = new boolean[linea4.length/3];
             for (int i = 0; i<linea4.length; i+=3){
-                nombrePatrocinadores[i]=linea4[i];
-                partidosRestantes[i]=Integer.parseInt(linea4[i+1]);
-                asociacion[i]=Boolean.parseBoolean(linea4[i+2]);
+                int j = i/3;
+                nombrePatrocinadores[j]=linea4[i];
+                partidosRestantes[j]=Integer.parseInt(linea4[i+1]);
+                asociacion[j]=Boolean.parseBoolean(linea4[i+2]);
             }
             int moralidad = Integer.parseInt(linea5[0]);
             int puntuacion = Integer.parseInt(linea6[0]);
@@ -140,14 +154,37 @@ public class ControladorMB {
                 rivalesJugados[i]=Integer.parseInt(linea7[i]);
             }
             
-
+            clubBase(club, nombreClub);
             opcionesFichaje(nombreClub, fichajes);
             crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
+            emp.setNombre(nombreEmpresario);
+            emp.setPuntuacion(puntuacion);
+            emp.setMoralidad(moralidad);
+            club.setNombre(nombreClub);
+            club.setRendimiento(rendimiento);
+            club.setPartidosJugados(partidosJugados);
+            club.setPartidosGanados(partidosGanados);
+            club.setCamisetasVendidas(camisetasVendidas);
+            club.setEntradasVendidas(entradasVendidas);
+            club.setCantidadPatrocinadores(cantidadPatrocinadores);
+            club.setDificultad(nombreClub);
 
-            emp = new Empresario(nombreEmpresario, puntuacion, moralidad);
-            club = new Club(nombreClub, rendimiento, partidosGanados, partidosJugados, nombreClub, camisetasVendidas, entradasVendidas, cantidadPatrocinadores);
+            int flag = 0;
+            for (Futbolista futbolista: club.getJugadores()){
+                for (int i = 0; i<linea3.length; i++){
+                    if (futbolista.getDorsal()==dorsales[i])
+                        flag=1;
+                }
+                if (flag==0)
+                    club.despedirJugador(futbolista);
+            }
             for (int i = 0; i<linea3.length; i++){
-                club.agregarJugador(club.buscarJugadorDorsal(dorsales[i]));
+                if (dorsales[i]>=10){
+                    Futbolista temp = fichajes.buscarJugadorDorsal(dorsales[i]);
+                    club.setRendimiento(club.getRendimiento()+temp.getRendimiento());
+                    club.agregarJugador(temp);
+                    fichajes.borrarFutbolista(temp);
+                }
             }
             for (int i = 0; i<cantidadPatrocinadores; i++){
                 if (partidosRestantes[i]<=0)
@@ -192,7 +229,9 @@ public class ControladorMB {
         //transicion exitosa
         gestionar(emp);
     }
+    
 
+    //a futuro, pasar esta funcion a Club.java
     public void clubBase(Club club, String nombreClub){
         String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
 
@@ -270,16 +309,9 @@ public class ControladorMB {
     
     public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
         // si la puntuacion es menor o igual a 0 se bloquea la simulacion
-        if(emp.getPuntuacion() <= 0){
-            revisarDerrota(emp);
-            return;
-        }
-        // si no quedan mas clubes en la copia la temporada termino
-        if(clubesCopia.getCantidad() <= 0){
-            vista.mostrarInformacion("Ya se han disputado todos los partidos de la temporada", "Fin de temporada");
-            revisarVictoria(club,emp);
-            return;
-        }   
+        revisarDerrota(emp);
+        revisarVictoria(club, emp);
+  
         Club rival;
         do{
             Random rivalRand = new Random();
@@ -713,16 +745,69 @@ public class ControladorMB {
     }
 
     public void revisarDerrota(Empresario emp){
-        if (emp.getPuntuacion()<=0)
+        if (emp.getPuntuacion()<=0){
+            File archivo = new File("memoryCard.txt");
+            archivo.delete();
             vista.mostrarPantalla("DERROTA");
+        }
     }
 
     public void revisarVictoria(Club club, Empresario emp){
         revisarDerrota(emp);
         vista.getPanelVictoria().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
-        if (club.getPartidosJugados()>=15)
+        if (club.getPartidosJugados()>=15){
+            File archivo = new File("memoryCard.txt");
+            archivo.delete();
             vista.mostrarPantalla("VICTORIA");
+        }
+            
     }
     
-    
+    public void guardarPartida(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo) throws IOException{
+        limpiarArchivo();
+        BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo));
+        bw.write(emp.getNombre());
+        bw.newLine();
+        bw.write(club.getNombre()+";"+club.getRendimiento()+";"+club.getPartidosGanados()+";"+club.getPartidosJugados()+";"+club.getCamisetasVendidas()+";"+club.getEntradasVendidas()+";"+club.getCantidadPatrocinadores());
+        bw.newLine();
+        for (int i = 0; i<club.getJugadores().size()-1; i++){
+            Futbolista temporal = club.getJugadores().get(i);
+            bw.write(temporal.getDorsal()+";");
+        }
+        Futbolista ultimo = club.getJugadores().get(club.getJugadores().size()-1);
+        bw.write(String.valueOf(ultimo.getDorsal()));
+        bw.newLine();
+        for (int i = 0; i<patrocinios.getPatrocinios().size()-1; i++){
+            Patrocinio temp = patrocinios.getPatrocinios().get(i);
+            bw.write(temp.getNombre()+";"+temp.getPartidosRestantes()+";"+temp.isAsociado()+";");
+        }
+        Patrocinio fin = patrocinios.getPatrocinios().get(patrocinios.getPatrocinios().size()-1);
+        bw.write(fin.getNombre()+";"+fin.getPartidosRestantes()+";"+fin.isAsociado());
+        bw.newLine();
+        bw.write(String.valueOf(emp.getMoralidad()));
+        System.out.println(emp.getMoralidad());
+        bw.newLine();
+        bw.write(String.valueOf(emp.getPuntuacion()));
+        System.out.println(emp.getPuntuacion());
+        bw.newLine();
+        for (int i = 0; i<clubes.getClubes().size()-1; i++){
+            bw.write(clubes.getClubes().get(i).getPartidosJugados()+";");        
+        }
+        Club last = clubes.getClubes().get(clubes.getClubes().size()-1);
+        bw.write(String.valueOf(last.getPartidosJugados()));
+        bw.newLine();
+        bw.close();
+    }
+
+    public void limpiarArchivo(){
+        Path ruta = Paths.get("memoryCard.txt");
+        try {
+            Files.writeString(ruta, ""); 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
+    

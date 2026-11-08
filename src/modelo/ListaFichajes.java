@@ -56,4 +56,13 @@ public class ListaFichajes {
         }
         return null;
     }
+
+    public Futbolista buscarJugadorDorsal(int dorsal){
+        for (Futbolista futbolista: futbolistas){
+            if (futbolista.getDorsal()==dorsal)
+                return futbolista;     
+        }
+        return null;
+    }
+
 }
