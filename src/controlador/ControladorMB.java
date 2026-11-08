@@ -16,8 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
-
-
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -34,6 +32,7 @@ import vista.VisualizadorMB;
  */
 public class ControladorMB {
     
+    private static final int MAX_JUGADORES_PLANTILLA = 11;
     private VisualizadorMB vista;
     private Empresario emp; 
     private Club club;
@@ -56,7 +55,7 @@ public class ControladorMB {
                                                                                 gestionar(emp);});
 
         
-        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
+        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, fichajes, club, clubes, clubesCopia, emp));
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar(emp));
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
         vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club, emp));
@@ -65,7 +64,7 @@ public class ControladorMB {
         vista.getInformacionRivales().getBtnVolver().addActionListener(e->gestionar(emp));
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp));
+        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, fichajes, club, clubes, clubesCopia, emp));
         
         
         
@@ -123,6 +122,8 @@ public class ControladorMB {
             String [] linea5 = br.readLine().split(";"); 
             String [] linea6 = br.readLine().split(";"); 
             String [] linea7 = br.readLine().split(";"); 
+            String linea8 = br.readLine();
+            String linea9 = br.readLine();
 
             String nombreEmpresario = linea1[0];
             String nombreClub = linea2[0];
@@ -153,7 +154,7 @@ public class ControladorMB {
             }
             
             clubBase(club, nombreClub);
-            opcionesFichaje(nombreClub, fichajes);
+            opcionesFichaje(club, nombreClub, fichajes);
             crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
             emp.setNombre(nombreEmpresario);
             emp.setPuntuacion(puntuacion);
@@ -168,23 +169,45 @@ public class ControladorMB {
             club.setDificultad(nombreClub);
             ArrayList<Futbolista> titulares = new ArrayList<>(club.getJugadores());
             club.getJugadores().clear();
-            for (int dorsal : dorsales){
-                Futbolista jugador = null;
-                for (Futbolista t : titulares){
-                    if (t.getDorsal() == dorsal){
-                        jugador = t;
-                        break;
+            if (linea8 != null && !linea8.isEmpty()){
+                for (String registro : linea8.split(";")){
+                    String[] datos = registro.split("\\|", -1);
+                    Futbolista jugador = new Futbolista(datos[0], Integer.parseInt(datos[1]),
+                            datos[2], Integer.parseInt(datos[3]), Double.parseDouble(datos[4]));
+                    club.agregarJugador(jugador);
+                    fichajes.borrarFutbolista(jugador);
+                }
+            }else{
+                for (int dorsal : dorsales){
+                    Futbolista jugador = null;
+                    for (Futbolista t : titulares){
+                        if (t.getDorsal() == dorsal){
+                            jugador = t;
+                            break;
+                        }
                     }
-                }
-                if (jugador == null){
-                    jugador = fichajes.buscarJugadorDorsal(dorsal);
+                    if (jugador == null){
+                        jugador = fichajes.buscarJugadorDorsal(dorsal);
+                        if (jugador != null)
+                            fichajes.borrarFutbolista(jugador);
+                    }
                     if (jugador != null)
-                        fichajes.borrarFutbolista(jugador); 
+                        club.agregarJugador(jugador);
                 }
-                if (jugador != null)
-                club.agregarJugador(jugador);
             }
             club.setRendimiento(rendimiento);
+            if (linea9 != null && !linea9.isEmpty()){
+                fichajes.getFutbolistas().clear();
+                for (String registro : linea9.split(";")){
+                    String[] datos = registro.split("\\|", -1);
+                    fichajes.agregarFutbolista(new Futbolista(datos[0], Integer.parseInt(datos[1]),
+                            datos[2], Integer.parseInt(datos[3]), Double.parseDouble(datos[4])));
+                }
+            }else{
+                for (int ciclo = 1; ciclo <= partidosJugados / 3; ciclo++){
+                    actualizarMercadoFichajes(nombreClub, fichajes, ciclo);
+                }
+            }
 
             for (Patrocinio p : new ArrayList<>(patrocinios.getPatrocinios())){
                 int indice = -1;
@@ -242,7 +265,7 @@ public class ControladorMB {
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
         crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
-        opcionesFichaje(nombreClub, fichajes);
+        opcionesFichaje(club, nombreClub, fichajes);
         //transicion exitosa
         gestionar(emp);
     }
@@ -250,6 +273,7 @@ public class ControladorMB {
 
     //a futuro, pasar esta funcion a Club.java
     public void clubBase(Club club, String nombreClub){
+        club.getJugadores().clear();
         String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
 
         if (nombreClub.equals("Liverpool")){
@@ -324,7 +348,7 @@ public class ControladorMB {
         }
     }
     
-    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
+    public void simular(ListaPatrocinios patrocinios, ListaFichajes fichajes, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
         // si la puntuacion es menor o igual a 0 se bloquea la simulacion
         revisarDerrota(emp);
         revisarVictoria(club, emp);
@@ -365,6 +389,11 @@ public class ControladorMB {
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
+        if (club.getPartidosJugados() % 3 == 0){
+            actualizarMercadoFichajes(club.getNombre(), fichajes, club.getPartidosJugados() / 3);
+            vista.mostrarInformacion("El rendimiento de los jugadores disponibles en el mercado cambió.",
+                    "Mercado de fichajes");
+        }
         for (Patrocinio patrocinio : new ArrayList<>(patrocinios.getPatrocinios())){
             if (patrocinio.isAsociado()){
                 patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
@@ -507,6 +536,10 @@ public class ControladorMB {
         vista.getPanelFichaje().getBtnFichar().removeActionListener(al);
         }
         vista.getPanelFichaje().getBtnFichar().addActionListener(e->{ //INICIO LISTENER (TERMINADO EN LINEA 365)
+        if (club.getJugadores().size() >= MAX_JUGADORES_PLANTILLA){
+            vista.mostrarError("La plantilla ya tiene 11 jugadores. Despide a uno antes de fichar.","Limite de equipo");
+            return;
+        }
         int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador disponible para fichar.", "Fichaje");
@@ -537,11 +570,6 @@ public class ControladorMB {
         //validacion fondos insuficientes
         if(emp.getPuntuacion() < jugador.getSueldo()){
             vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
-            return;
-        }
-        //validacion limite de rendimiento del cluc
-        if(club.getJugadores().size()>11){
-            vista.mostrarError("El club no puede superar los 11 jugadores","Limite de equipo");
             return;
         }
         club.agregarJugador(jugador);
@@ -719,32 +747,91 @@ public class ControladorMB {
         emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
     }
 
-    public void opcionesFichaje(String nombreClub, ListaFichajes fichajes){
+    public void opcionesFichaje(Club club, String nombreClub, ListaFichajes fichajes){
         fichajes.getFutbolistas().clear();
-        Futbolista f1;
-        Futbolista f2;
-        Futbolista f3;
-        Futbolista f4;
+        Futbolista[] opciones;
         if (nombreClub.equals("Liverpool")){
-            f1 = new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000);
-            f2 = new Futbolista("Victor Munoz", 11, "Extremo izquierdo", 10, 70000);
-            f3 = new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000);
-            f4 = new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000);
+            opciones = new Futbolista[]{
+                new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000),
+                new Futbolista("Victor Munoz", 11, "Extremo izquierdo", 10, 70000),
+                new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000),
+                new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000)
+            };
         }else if (nombreClub.equals("Inter")){
-            f1 = new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000);
-            f2 = new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000);
-            f3 = new Futbolista("Petar Sucic", 12, "Volante", 4, 30000);
-            f4 = new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000);
+            opciones = new Futbolista[]{
+                new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000),
+                new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000),
+                new Futbolista("Petar Sucic", 12, "Volante", 4, 30000),
+                new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000)
+            };
         }else{
-            f1 = new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000);
-            f2 = new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000);
-            f3 = new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000);
-            f4 = new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000);
+            opciones = new Futbolista[]{
+                new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000),
+                new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000),
+                new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000),
+                new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000)
+            };
         }
-        fichajes.agregarFutbolista(f1);
-        fichajes.agregarFutbolista(f2);
-        fichajes.agregarFutbolista(f3);
-        fichajes.agregarFutbolista(f4);
+        club.agregarJugador(opciones[0]);
+        club.agregarJugador(opciones[1]);
+        fichajes.agregarFutbolista(opciones[2]);
+        fichajes.agregarFutbolista(opciones[3]);
+        for (int dorsal = 15; dorsal < 25; dorsal++){
+            fichajes.agregarFutbolista(generarJugadorMercado(club, nombreClub, dorsal, fichajes, 0));
+        }
+    }
+
+    private void actualizarMercadoFichajes(String nombreClub, ListaFichajes fichajes, int cicloMercado){
+        for (Futbolista jugador : fichajes.getFutbolistas()){
+            Random aleatorio = new Random(nombreClub.hashCode() * 31L
+                    + jugador.getNombre().hashCode() + jugador.getDorsal() + cicloMercado * 1009L);
+            int nuevoRendimiento = 4 + aleatorio.nextInt(5);
+            if (nuevoRendimiento == jugador.getRendimiento()){
+                nuevoRendimiento = nuevoRendimiento == 8 ? 4 : nuevoRendimiento + 1;
+            }
+            jugador.setRendimiento(nuevoRendimiento);
+        }
+    }
+
+    private Futbolista generarJugadorMercado(Club club, String nombreClub, int dorsal, ListaFichajes fichajes, int cicloMercado){
+        String[] nombres;
+        String[] apellidos;
+        String[] posiciones = {
+            "Arquero", "Central derecho", "Lateral izquierdo", "Lateral derecho",
+            "Mediocentro defensivo", "Central izquierdo", "Extremo derecho",
+            "Volante", "Delantero", "Mediapunta", "Extremo izquierdo"
+        };
+        if (nombreClub.equals("Liverpool")){
+            nombres = new String[]{"Oliver", "Harry", "Jack", "George", "Thomas", "Charlie", "James", "Oscar"};
+            apellidos = new String[]{"Smith", "Jones", "Taylor", "Brown", "Wilson", "Davies", "Evans", "Roberts"};
+        }else if (nombreClub.equals("Inter")){
+            nombres = new String[]{"Luca", "Matteo", "Marco", "Lorenzo", "Andrea", "Federico", "Nicolo", "Davide"};
+            apellidos = new String[]{"Rossi", "Romano", "Moretti", "Conti", "Ricci", "Marino", "Greco", "Gallo"};
+        }else{
+            nombres = new String[]{"Benjamin", "Vicente", "Matias", "Diego", "Joaquin", "Maximiliano", "Lucas", "Cristobal"};
+            apellidos = new String[]{"Gonzalez", "Muñoz", "Rojas", "Diaz", "Perez", "Soto", "Contreras", "Silva"};
+        }
+
+        Random aleatorio = new Random(nombreClub.hashCode() * 31L + dorsal + cicloMercado * 1009L);
+        int inicioNombre = aleatorio.nextInt(nombres.length);
+        int inicioApellido = aleatorio.nextInt(apellidos.length);
+        String nombre = null;
+        for (int intento = 0; intento < nombres.length * apellidos.length; intento++){
+            String candidato = nombres[(inicioNombre + intento) % nombres.length] + " "
+                    + apellidos[(inicioApellido + intento / nombres.length) % apellidos.length];
+            if (club.buscarJugadorNombre(candidato) == null && fichajes.buscarFutbolista(candidato) == null){
+                nombre = candidato;
+                break;
+            }
+        }
+        if (nombre == null){
+            throw new IllegalStateException("No se pudo generar un nombre de jugador disponible para " + nombreClub);
+        }
+
+        int rendimiento = 4 + aleatorio.nextInt(5);
+        double sueldo = rendimiento * 10000.0;
+        String posicion = posiciones[aleatorio.nextInt(posiciones.length)];
+        return new Futbolista(nombre, dorsal, posicion, rendimiento, sueldo);
     }
 
     public void listarRivales(ListaClubes clubes){
@@ -813,6 +900,24 @@ public class ControladorMB {
         }
         Club last = clubes.getClubes().get(clubes.getClubes().size()-1);
         bw.write(String.valueOf(last.getPartidosJugados()));
+        bw.newLine();
+        for (int i = 0; i < club.getJugadores().size(); i++){
+            Futbolista jugador = club.getJugadores().get(i);
+            if (i > 0){
+                bw.write(";");
+            }
+            bw.write(jugador.getNombre()+"|"+jugador.getDorsal()+"|"+jugador.getPosicion()+"|"
+                    +jugador.getRendimiento()+"|"+jugador.getSueldo());
+        }
+        bw.newLine();
+        for (int i = 0; i < fichajes.getFutbolistas().size(); i++){
+            Futbolista jugador = fichajes.getFutbolistas().get(i);
+            if (i > 0){
+                bw.write(";");
+            }
+            bw.write(jugador.getNombre()+"|"+jugador.getDorsal()+"|"+jugador.getPosicion()+"|"
+                    +jugador.getRendimiento()+"|"+jugador.getSueldo());
+        }
         bw.newLine();
         bw.close();
     }
