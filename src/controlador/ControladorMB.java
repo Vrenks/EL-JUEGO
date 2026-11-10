@@ -829,3 +829,32 @@ public class ControladorMB {
 
 }
     
+
+
+
+
+
+
+/* 
+        Compra con receta:              [###########]
+        Compra sin receta:              [#####......]
+        Compra de fácil acceso:         [#######....]
+        Solicitud de fabricación:       [#########..]
+
+
+
+        Compra con receta:              [R][E][G][A][V]      
+        Compra sin receta:              [R][E][G]
+        Compra de fácil acceso:         [R][E][G][V]
+        Solicitud de fabricación:       [R][E][G][A]
+
+
+
+
+
+
+
+
+
+
+*/
