@@ -32,8 +32,7 @@ public class PanelVictoria extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        lblMensaje = new javax.swing.JLabel();
         BtnVolverAlInicio = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -42,10 +41,7 @@ public class PanelVictoria extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Victoria");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("Finalizaste la liga con ganancias! ");
-        jScrollPane1.setViewportView(jTextArea1);
+        lblMensaje.setText("Finalizaste la liga con ganancias! ");
 
         BtnVolverAlInicio.setText("Volver al inicio");
         BtnVolverAlInicio.addActionListener(this::BtnVolverAlInicioActionPerformed);
@@ -67,7 +63,7 @@ public class PanelVictoria extends javax.swing.JPanel {
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(79, 79, 79)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblMensaje)))
                 .addContainerGap(75, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
@@ -90,7 +86,7 @@ public class PanelVictoria extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(38, 38, 38)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblMensaje)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -159,7 +155,6 @@ public class PanelVictoria extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lblMensaje;
     // End of variables declaration//GEN-END:variables
 }

@@ -71,9 +71,9 @@ public class VisualizadorMB extends javax.swing.JFrame {
         cardlayout.show(contenedor, "INICIO");
         
         setContentPane(contenedor);
-        
-        
-        
+        setSize(900, 650);
+        setLocationRelativeTo(null);
+
     }
 
     /**
