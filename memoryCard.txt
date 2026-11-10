@@ -1,0 +1,9 @@
+Elon Musk
+Inter;65;3;4;6000;12000;1
+1;3;4;5;6;7;8;9;10;11;13
+Apple;6;false;UNICEF;6;false;LATAM;5;true;OpenAI;6;false;Betano;6;false;Tel Aviv Inver-sionistas;6;false
+2
+1570000
+1;0;1;0;1;0;0;0;0;0;0;0;0;1;0
+Josep Martínez|1|Arquero|6|10000.0;Federico Dimarco|3|Lateral izquierdo|6|10000.0;Djed Spence|4|Lateral derecho|6|10000.0;Nicolo Barella|5|Mediocentro defensivo|6|10000.0;Alessandro Bastoni|6|Central izquierdo|6|10000.0;Ange-Yoan Bonny|7|Extremo derecho|6|10000.0;Hakan Calhanoglu|8|Volante|6|10000.0;Lautaro Martinez|9|Delantero|6|10000.0;Pio Esposito|10|Mediapunta|6|50000.0;Carlos Augusto|11|Extremo izquierdo|10|90000.0;Henrikh Mkhtitaryan|13|Volante|8|60000.0
+Petar Sucic|12|Volante|5|30000.0;Federico Ricci|15|Mediocentro defensivo|6|80000.0;Federico Greco|16|Mediapunta|6|80000.0;Federico Rossi|17|Lateral derecho|8|70000.0;Federico Moretti|18|Lateral derecho|8|40000.0;Nicolo Ricci|19|Extremo derecho|8|70000.0;Federico Gallo|20|Arquero|4|80000.0;Federico Romano|21|Lateral derecho|5|80000.0;Federico Conti|22|Central izquierdo|6|50000.0;Federico Marino|23|Delantero|5|40000.0;Nicolo Rossi|24|Lateral izquierdo|7|40000.0
