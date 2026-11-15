@@ -5,7 +5,6 @@
 package vista;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 
 /**
  *
@@ -34,7 +33,7 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        LblPuntuacion = new javax.swing.JLabel();
+        LblPuntuacion2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         BtnCambiar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -70,7 +69,7 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
 
         jLabel4.setText("Puntuación: ");
 
-        LblPuntuacion.setText("placeHolder");
+        LblPuntuacion2.setText("placeHolder");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -80,7 +79,7 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LblPuntuacion)
+                .addComponent(LblPuntuacion2)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -89,7 +88,7 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(LblPuntuacion))
+                    .addComponent(LblPuntuacion2))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -188,21 +187,12 @@ public class PanelCambiarJugador extends javax.swing.JPanel {
     public javax.swing.JTable getTablaCambiar() {
         return TablaCambiar;
     }
-
-    public JLabel getLblPuntuacion() {
-        return LblPuntuacion;
-    }
-
-    public void setLblPuntuacion(JLabel LblPuntuacion) {
-        this.LblPuntuacion = LblPuntuacion;
-    }
-    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnCambiar;
     private javax.swing.JButton BtnCambiarJugadorAModificacion;
-    private javax.swing.JLabel LblPuntuacion;
+    private javax.swing.JLabel LblPuntuacion2;
     private javax.swing.JTable TablaCambiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
