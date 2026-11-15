@@ -5,6 +5,7 @@
 package controlador;
 
 
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +17,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.JButton;
+import javax.swing.JTable;
+
+
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -32,13 +38,13 @@ import vista.VisualizadorMB;
  */
 public class ControladorMB {
     
-    private static final int MAX_JUGADORES_PLANTILLA = 11;
     private VisualizadorMB vista;
     private Empresario emp; 
     private Club club;
     
     
     public ControladorMB(VisualizadorMB vista, Empresario emp, Club club) {
+        AtomicInteger sesion = new AtomicInteger(1);
         this.vista=vista;
         this.emp=emp;
         this.club=club;
@@ -48,14 +54,14 @@ public class ControladorMB {
         ListaClubes clubesCopia = new ListaClubes();
         
         vista.getPanelInicio().getBtnContinuarPartida().addActionListener(e->{
-            continuarPartida(emp, club, clubes, clubesCopia, patrocinios, fichajes, "memoryCard.txt");
+            continuarPartida(emp, club, clubes, clubesCopia, patrocinios, fichajes, "memoryCard.txt", sesion);
         });
         vista.getPanelInicio().getBtnIniciarPartida().addActionListener(e->vista.mostrarPantalla("CREACION"));
-        vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, clubesCopia, patrocinios, fichajes);
+        vista.getPanelCreacion().getBtnCreacionAGestion().addActionListener(e->{crear(emp, club, clubes, clubesCopia, patrocinios, fichajes, sesion);
                                                                                 gestionar(emp);});
 
         
-        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, fichajes, club, clubes, clubesCopia, emp));
+        vista.getPanelGestion().getBtnGestionASimulacion().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp, sesion));
         vista.getPanelGestion().getBtnGestionAModificacion().addActionListener(e->modificar(emp));
         vista.getPanelGestion().getBtnGestionAOpciones().addActionListener(e->opciones());
         vista.getPanelGestion().getBtnGestionAInformacion().addActionListener(e->informacion(club, emp));
@@ -64,18 +70,18 @@ public class ControladorMB {
         vista.getInformacionRivales().getBtnVolver().addActionListener(e->gestionar(emp));
         
         vista.getPanelSimulacion().getBtnSimulacionAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, fichajes, club, clubes, clubesCopia, emp));
+        vista.getPanelSimulacion().getBtnSimularDeNuevo().addActionListener(e->simular(patrocinios, club, clubes, clubesCopia, emp, sesion));
         
         
         
         vista.getPanelModificacionJugadores().getBtnModificacionAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->ficharJugador(fichajes, emp));
+        vista.getPanelModificacionJugadores().getBtnModificacionAFichaje().addActionListener(e->ficharJugador(fichajes, emp, sesion)); //intentar 
         vista.getPanelModificacionJugadores().getBtnModificacionACambiarJugador().addActionListener(e->cambiar(emp));
-        vista.getPanelFichaje().getBtnFichar().addActionListener(e->ficharJugador(fichajes, emp));
-        vista.getPanelCambiarJugador().getBtnCambiar().addActionListener(e->despedirJugador());
+        vista.getPanelFichaje().getBtnFichar().addActionListener(e->ficharJugador(fichajes, emp, sesion));
+        vista.getPanelCambiarJugador().getBtnCambiar().addActionListener(e->despedirJugador(sesion));
         
         vista.getPanelOpciones().getBtnOpcionesAGestion().addActionListener(e->gestionar(emp));
-        vista.getPanelOpciones().getBtnGuardarYSalir().addActionListener(e->{try {guardarPartida(emp, club, clubes, patrocinios, fichajes, "memoryCard.txt");
+        vista.getPanelOpciones().getBtnGuardarYSalir().addActionListener(e->{try {guardarPartida(emp, club, clubes, patrocinios, fichajes, "memoryCard.txt", sesion);
                                                                                   System.exit(0);
             } catch (IOException e1) {
             e1.printStackTrace();
@@ -95,14 +101,20 @@ public class ControladorMB {
 
         vista.getPanelVictoria().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
         vista.getPanelVictoria().getBtnSalir().addActionListener(e->System.exit(0));
+        
+        vista.getPanelGestion().getBtnEventos().addActionListener(e->{
+                vista.getPanelEventos().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
+                vista.mostrarPantalla("EVENTOS");
+                });
+        vista.getPanelEventos().getBtnEventosAGestion().addActionListener(e->gestionar(emp));
 
         
         
     }
 
-    public void continuarPartida(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo){
+    public void continuarPartida(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo, AtomicInteger sesion){
         try {
-            cargarArchivo(emp, club, clubes, clubesCopia, patrocinios, fichajes, nombreArchivo);
+            cargarArchivo(emp, club, clubes, clubesCopia, patrocinios, fichajes, nombreArchivo, sesion);
             gestionar(emp);
         } catch (Exception e) {
             vista.mostrarError(e.getMessage() != null ? e.getMessage() : e.toString(), "ERROR DE CARGA");
@@ -110,7 +122,7 @@ public class ControladorMB {
         
     }
 
-    public void cargarArchivo(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo) throws IOException{
+    public void cargarArchivo(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo, AtomicInteger sesion) throws IOException{
         File f = new File(nombreArchivo);
         if (!f.exists())
             throw new IllegalArgumentException("ERROR: archivo '"+nombreArchivo+"' no encontrado o no se pudo abrir.");
@@ -122,8 +134,9 @@ public class ControladorMB {
             String [] linea5 = br.readLine().split(";"); 
             String [] linea6 = br.readLine().split(";"); 
             String [] linea7 = br.readLine().split(";"); 
-            String linea8 = br.readLine();
-            String linea9 = br.readLine();
+            String [] linea8 = br.readLine().split(";");
+            int cantidadEventos = Integer.parseInt(br.readLine());
+            
 
             String nombreEmpresario = linea1[0];
             String nombreClub = linea2[0];
@@ -149,12 +162,33 @@ public class ControladorMB {
             int moralidad = Integer.parseInt(linea5[0]);
             int puntuacion = Integer.parseInt(linea6[0]);
             int rivalesJugados[]= new int[15];
+            int cantidadPartidos = 0;
             for (int i = 0; i<15; i++){
                 rivalesJugados[i]=Integer.parseInt(linea7[i]);
+                if (rivalesJugados[i]==1)
+                    cantidadPartidos++;
+            }
+            for (int i = 0; i<cantidadPartidos; i++){
+                String[] rival = linea8[i].split(",");
+                String numPartido = rival[0];
+                String nombreRival = rival[1];
+                String resultado = rival[2];
+                String linea [] = new String[]{numPartido, nombreRival, resultado};
+                agregarLineaTabla(vista.getPanelSimulacion().getTablaPartido(), linea);
             }
             
+            for (int i = 0; i<cantidadEventos; i++){
+                String [] linea = br.readLine().split(";");
+                String sesionEvento = String.valueOf(sesion);
+                String tipoEvento = linea[1];
+                String evento = linea[2];
+                String contenidoTabla[] = new String[] {sesionEvento, tipoEvento, evento};
+                agregarLineaTabla(vista.getPanelEventos().getTablaEventos(), contenidoTabla);
+            }
+            
+            
             clubBase(club, nombreClub);
-            opcionesFichaje(club, nombreClub, fichajes);
+            opcionesFichaje(nombreClub, fichajes);
             crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
             emp.setNombre(nombreEmpresario);
             emp.setPuntuacion(puntuacion);
@@ -169,45 +203,23 @@ public class ControladorMB {
             club.setDificultad(nombreClub);
             ArrayList<Futbolista> titulares = new ArrayList<>(club.getJugadores());
             club.getJugadores().clear();
-            if (linea8 != null && !linea8.isEmpty()){
-                for (String registro : linea8.split(";")){
-                    String[] datos = registro.split("\\|", -1);
-                    Futbolista jugador = new Futbolista(datos[0], Integer.parseInt(datos[1]),
-                            datos[2], Integer.parseInt(datos[3]), Double.parseDouble(datos[4]));
-                    club.agregarJugador(jugador);
-                    fichajes.borrarFutbolista(jugador);
+            for (int dorsal : dorsales){
+                Futbolista jugador = null;
+                for (Futbolista t : titulares){
+                    if (t.getDorsal() == dorsal){
+                        jugador = t;
+                        break;
+                    }
                 }
-            }else{
-                for (int dorsal : dorsales){
-                    Futbolista jugador = null;
-                    for (Futbolista t : titulares){
-                        if (t.getDorsal() == dorsal){
-                            jugador = t;
-                            break;
-                        }
-                    }
-                    if (jugador == null){
-                        jugador = fichajes.buscarJugadorDorsal(dorsal);
-                        if (jugador != null)
-                            fichajes.borrarFutbolista(jugador);
-                    }
+                if (jugador == null){
+                    jugador = fichajes.buscarJugadorDorsal(dorsal);
                     if (jugador != null)
-                        club.agregarJugador(jugador);
+                        fichajes.borrarFutbolista(jugador); 
                 }
+                if (jugador != null)
+                club.agregarJugador(jugador);
             }
             club.setRendimiento(rendimiento);
-            if (linea9 != null && !linea9.isEmpty()){
-                fichajes.getFutbolistas().clear();
-                for (String registro : linea9.split(";")){
-                    String[] datos = registro.split("\\|", -1);
-                    fichajes.agregarFutbolista(new Futbolista(datos[0], Integer.parseInt(datos[1]),
-                            datos[2], Integer.parseInt(datos[3]), Double.parseDouble(datos[4])));
-                }
-            }else{
-                for (int ciclo = 1; ciclo <= partidosJugados / 3; ciclo++){
-                    actualizarMercadoFichajes(nombreClub, fichajes, ciclo);
-                }
-            }
 
             for (Patrocinio p : new ArrayList<>(patrocinios.getPatrocinios())){
                 int indice = -1;
@@ -240,10 +252,12 @@ public class ControladorMB {
                 }
             }
         }
+        sesion.addAndGet(1);
+        agregarEvento(sesion, "Carga", "Sesión cargada");
     }
     
     
-    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
+    public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes, AtomicInteger sesion){
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText().trim();
         //validacion para que el nombre no este vacio
         if(nombreEmpresario.isEmpty()){
@@ -265,7 +279,9 @@ public class ControladorMB {
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
         crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
-        opcionesFichaje(club, nombreClub, fichajes);
+        opcionesFichaje(nombreClub, fichajes);
+        String[] nombreLiga = dificultad.split("\\(");
+        agregarEvento(sesion, "Creación", nombreEmpresario+" ahora es presidente de "+nombreClub+" en la "+nombreLiga[0]+".");
         //transicion exitosa
         gestionar(emp);
     }
@@ -273,7 +289,6 @@ public class ControladorMB {
 
     //a futuro, pasar esta funcion a Club.java
     public void clubBase(Club club, String nombreClub){
-        club.getJugadores().clear();
         String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
 
         if (nombreClub.equals("Liverpool")){
@@ -348,7 +363,7 @@ public class ControladorMB {
         }
     }
     
-    public void simular(ListaPatrocinios patrocinios, ListaFichajes fichajes, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
+    public void simular(ListaPatrocinios patrocinios, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp, AtomicInteger sesion){
         // si la puntuacion es menor o igual a 0 se bloquea la simulacion
         revisarDerrota(emp);
         revisarVictoria(club, emp);
@@ -361,55 +376,57 @@ public class ControladorMB {
 
         Random rand = new Random();
         String resultado;
+        String equipoGanador;
         int diferenciaRendimiento, diferenciaGoles;
         if (rival.getRendimiento()<club.getRendimiento()){
             diferenciaRendimiento=club.getRendimiento()-rival.getRendimiento();
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
-            resultado = club.getNombre()+": "+ diferenciaGoles + "-0";
+            equipoGanador = club.getNombre();
+            resultado =diferenciaGoles + "-0";
             club.setPartidosGanados(club.getPartidosGanados()+1);
             ventasRendimiento(diferenciaGoles, club, emp);
+            agregarEvento(sesion, "Simulación", club.getNombre()+" le ganó "+resultado+" a "+rival.getNombre());
 
         }else if (rival.getRendimiento()>club.getRendimiento()){
             diferenciaRendimiento=rival.getRendimiento()-club.getRendimiento();
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
-            resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
+            equipoGanador = rival.getNombre();
+            resultado = "0-"+ diferenciaGoles;
             ventasRendimiento(diferenciaGoles*-1, club, emp);
+            agregarEvento(sesion, "Simulación", club.getNombre()+" perdió "+resultado+" con "+rival.getNombre());
         }
-        else{ 
-            diferenciaGoles = 0;
-            resultado = "Empate: 0-0";
+        else{
+            equipoGanador = "Empate";
+            resultado = "0-0";
+            agregarEvento(sesion, "Simulación", club.getNombre()+" empató "+resultado+" con"+rival.getNombre());
         }
-
+        
         rival.setPartidosJugados(rival.getPartidosJugados()+1);
         clubes.modificarRival(rival);
         clubesCopia.borrarClub(rival);
 
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
-        tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), resultado});
+        tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), equipoGanador+": " + resultado});
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
-        if (club.getPartidosJugados() % 3 == 0){
-            actualizarMercadoFichajes(club.getNombre(), fichajes, club.getPartidosJugados() / 3);
-            vista.mostrarInformacion("El rendimiento de los jugadores disponibles en el mercado cambió.",
-                    "Mercado de fichajes");
-        }
         for (Patrocinio patrocinio : new ArrayList<>(patrocinios.getPatrocinios())){
             if (patrocinio.isAsociado()){
                 patrocinio.setPartidosRestantes(patrocinio.getPartidosRestantes()-1);
-                if (patrocinio.getPartidosRestantes()<=0){
+                if (patrocinio.getPartidosRestantes()<=0 && club.getPartidosJugados()<15){
                     club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
                     emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
                     vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+                    agregarEvento(sesion, "Patrocinio", "El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2);
                     patrocinios.borrarPatrocinio(patrocinio);
                 }
             }
         }
-        if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%3==0){
+        if (club.getPartidosJugados()!=0 && club.getPartidosJugados()%3==0 && club.getPartidosJugados()<15){
             int eleccion = vista.eleccion("Patrocinador(es) interesados. Presione YES para revisarlo(s) o NO para seguir en la simulacion.", "INFORMACION PATROCINIOS");
             if (eleccion!=0)
                 return;
-            patrocinar(patrocinios, emp, club);
+            patrocinar(patrocinios, emp, club, sesion);
             ventasMoralidad(club, emp);
         }
         if (club.getPartidosJugados()!=0&&club.getPartidosJugados()%4==0){
@@ -418,6 +435,7 @@ public class ControladorMB {
                 sueldos+=futbolista.getSueldo();
             }
             vista.mostrarInformacion("Sueldos cobrados: $"+sueldos, "INFORMACION IMPORTANTE");
+            agregarEvento(sesion, "Sueldos", "Se cobraron $"+sueldos+" al club por el cobro de los sueldos de los jugadores.");
         }
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         revisarDerrota(emp);
@@ -438,7 +456,11 @@ public class ControladorMB {
         }
     }
     
-    public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club){
+    public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club, AtomicInteger sesion){
+        JButton btnElegir = vista.getPanelPatrocinios().getBtnElegirPatrocinador();
+        for (ActionListener al : btnElegir.getActionListeners()) {
+            btnElegir.removeActionListener(al);
+        }
         revisarDerrota(emp);
         vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         Random rand = new Random();
@@ -448,7 +470,7 @@ public class ControladorMB {
         while (condicion){
             numAleatorio1 = rand.nextInt(patrocinios.getPatrocinios().size());
             numAleatorio2 = rand.nextInt(patrocinios.getPatrocinios().size());
-            if (!patrocinios.getPatrocinios().get(numAleatorio1).isAsociado()||!patrocinios.getPatrocinios().get(numAleatorio2).isAsociado())
+            if (!patrocinios.getPatrocinios().get(numAleatorio1).isAsociado()&&!patrocinios.getPatrocinios().get(numAleatorio2).isAsociado()&&numAleatorio1!=numAleatorio2)
                 break;
         }
         Patrocinio p1;
@@ -477,16 +499,19 @@ public class ControladorMB {
                 String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
                 Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
                 patrocinio.setAsociado(true);
+                agregarEvento(sesion, "Patrocinio", club.getNombre()+" eligió a "+patrocinio.getNombre()+" como patrocinador. Inversión: "+patrocinio.getInversion()+"   Moralidad: "+patrocinio.getMoralidad());
                 int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
                 int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
                 emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
                 emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
+                vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
                 club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
                 vista.mostrarPantalla("SIMULACION");
+                
             }  
         });
         revisarDerrota(emp);
-        vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));;
+        vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("PATROCINIOS");
     }
     
@@ -505,6 +530,7 @@ public class ControladorMB {
     
     public void cambiar(Empresario emp){
         ListarJugadores(club);
+        vista.getPanelCambiarJugador().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("CAMBIAR JUGADOR");
 
     }
@@ -525,7 +551,7 @@ public class ControladorMB {
     }
 
 
-    public void ficharJugador(ListaFichajes fichajes, Empresario emp){
+    public void ficharJugador(ListaFichajes fichajes, Empresario emp, AtomicInteger sesion){
         revisarDerrota(emp);
         vista.getPanelFichaje().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("FICHAJE");
@@ -535,11 +561,7 @@ public class ControladorMB {
         for (java.awt.event.ActionListener al : vista.getPanelFichaje().getBtnFichar().getActionListeners()) {
         vista.getPanelFichaje().getBtnFichar().removeActionListener(al);
         }
-        vista.getPanelFichaje().getBtnFichar().addActionListener(e->{ //INICIO LISTENER (TERMINADO EN LINEA 365)
-        if (club.getJugadores().size() >= MAX_JUGADORES_PLANTILLA){
-            vista.mostrarError("La plantilla ya tiene 11 jugadores. Despide a uno antes de fichar.","Limite de equipo");
-            return;
-        }
+        vista.getPanelFichaje().getBtnFichar().addActionListener(e->{
         int fila = vista.getPanelFichaje().getFilaSeleccionada();
         if (fila == -1){
             vista.mostrarInformacion("Selecciona un jugador disponible para fichar.", "Fichaje");
@@ -572,18 +594,23 @@ public class ControladorMB {
             vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
             return;
         }
+        //validacion limite de rendimiento del cluc
+        if(club.getJugadores().size()>11){
+            vista.mostrarError("El club no puede superar los 11 jugadores","Limite de equipo");
+            return;
+        }
         club.agregarJugador(jugador);
         fichajes.borrarFutbolista(jugador);
         //borrado visual de la tabla
         tabla.removeRow(fila);
         revisarDerrota(emp);
         vista.mostrarInformacion("Jugador fichado con exito", "Fichaje exitoso");
+        agregarEvento(sesion, "Fichaje", club.getNombre()+ " fichó a "+jugador.getNombre()+" para su plantel. Sueldo: "+jugador.getSueldo()+"   Rendimiento: "+jugador.getRendimiento());
         modificar(emp);
-        
-        }); //FINAL LISTENER (INICIADO EN lÍNEA 342)
+        }); 
     }
 
-    public void despedirJugador(){
+    public void despedirJugador(AtomicInteger sesion){
         javax.swing.JTable tabla = vista.getPanelCambiarJugador().getTablaCambiar();
         int fila = tabla.getSelectedRow();
         if (fila == -1){
@@ -609,6 +636,7 @@ public class ControladorMB {
         }
 
         club.despedirJugador(jugador);
+        agregarEvento(sesion, "Despido", club.getNombre()+" despidió a "+jugador.getNombre() + " por decisión personal del Presidente "+emp.getNombre());
         ListarJugadores(club);
     }
     
@@ -747,91 +775,32 @@ public class ControladorMB {
         emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
     }
 
-    public void opcionesFichaje(Club club, String nombreClub, ListaFichajes fichajes){
+    public void opcionesFichaje(String nombreClub, ListaFichajes fichajes){
         fichajes.getFutbolistas().clear();
-        Futbolista[] opciones;
+        Futbolista f1;
+        Futbolista f2;
+        Futbolista f3;
+        Futbolista f4;
         if (nombreClub.equals("Liverpool")){
-            opciones = new Futbolista[]{
-                new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000),
-                new Futbolista("Victor Munoz", 11, "Extremo izquierdo", 10, 70000),
-                new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000),
-                new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000)
-            };
+            f1 = new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000);
+            f2 = new Futbolista("Victor Munoz", 11, "Extremo izquierdo", 10, 70000);
+            f3 = new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000);
+            f4 = new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000);
         }else if (nombreClub.equals("Inter")){
-            opciones = new Futbolista[]{
-                new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000),
-                new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000),
-                new Futbolista("Petar Sucic", 12, "Volante", 4, 30000),
-                new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000)
-            };
+            f1 = new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000);
+            f2 = new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000);
+            f3 = new Futbolista("Petar Sucic", 12, "Volante", 4, 30000);
+            f4 = new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000);
         }else{
-            opciones = new Futbolista[]{
-                new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000),
-                new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000),
-                new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000),
-                new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000)
-            };
+            f1 = new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000);
+            f2 = new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000);
+            f3 = new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000);
+            f4 = new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000);
         }
-        club.agregarJugador(opciones[0]);
-        club.agregarJugador(opciones[1]);
-        fichajes.agregarFutbolista(opciones[2]);
-        fichajes.agregarFutbolista(opciones[3]);
-        for (int dorsal = 15; dorsal < 25; dorsal++){
-            fichajes.agregarFutbolista(generarJugadorMercado(club, nombreClub, dorsal, fichajes, 0));
-        }
-    }
-
-    private void actualizarMercadoFichajes(String nombreClub, ListaFichajes fichajes, int cicloMercado){
-        for (Futbolista jugador : fichajes.getFutbolistas()){
-            Random aleatorio = new Random(nombreClub.hashCode() * 31L
-                    + jugador.getNombre().hashCode() + jugador.getDorsal() + cicloMercado * 1009L);
-            int nuevoRendimiento = 4 + aleatorio.nextInt(5);
-            if (nuevoRendimiento == jugador.getRendimiento()){
-                nuevoRendimiento = nuevoRendimiento == 8 ? 4 : nuevoRendimiento + 1;
-            }
-            jugador.setRendimiento(nuevoRendimiento);
-        }
-    }
-
-    private Futbolista generarJugadorMercado(Club club, String nombreClub, int dorsal, ListaFichajes fichajes, int cicloMercado){
-        String[] nombres;
-        String[] apellidos;
-        String[] posiciones = {
-            "Arquero", "Central derecho", "Lateral izquierdo", "Lateral derecho",
-            "Mediocentro defensivo", "Central izquierdo", "Extremo derecho",
-            "Volante", "Delantero", "Mediapunta", "Extremo izquierdo"
-        };
-        if (nombreClub.equals("Liverpool")){
-            nombres = new String[]{"Oliver", "Harry", "Jack", "George", "Thomas", "Charlie", "James", "Oscar"};
-            apellidos = new String[]{"Smith", "Jones", "Taylor", "Brown", "Wilson", "Davies", "Evans", "Roberts"};
-        }else if (nombreClub.equals("Inter")){
-            nombres = new String[]{"Luca", "Matteo", "Marco", "Lorenzo", "Andrea", "Federico", "Nicolo", "Davide"};
-            apellidos = new String[]{"Rossi", "Romano", "Moretti", "Conti", "Ricci", "Marino", "Greco", "Gallo"};
-        }else{
-            nombres = new String[]{"Benjamin", "Vicente", "Matias", "Diego", "Joaquin", "Maximiliano", "Lucas", "Cristobal"};
-            apellidos = new String[]{"Gonzalez", "Muñoz", "Rojas", "Diaz", "Perez", "Soto", "Contreras", "Silva"};
-        }
-
-        Random aleatorio = new Random(nombreClub.hashCode() * 31L + dorsal + cicloMercado * 1009L);
-        int inicioNombre = aleatorio.nextInt(nombres.length);
-        int inicioApellido = aleatorio.nextInt(apellidos.length);
-        String nombre = null;
-        for (int intento = 0; intento < nombres.length * apellidos.length; intento++){
-            String candidato = nombres[(inicioNombre + intento) % nombres.length] + " "
-                    + apellidos[(inicioApellido + intento / nombres.length) % apellidos.length];
-            if (club.buscarJugadorNombre(candidato) == null && fichajes.buscarFutbolista(candidato) == null){
-                nombre = candidato;
-                break;
-            }
-        }
-        if (nombre == null){
-            throw new IllegalStateException("No se pudo generar un nombre de jugador disponible para " + nombreClub);
-        }
-
-        int rendimiento = 4 + aleatorio.nextInt(5);
-        double sueldo = rendimiento * 10000.0;
-        String posicion = posiciones[aleatorio.nextInt(posiciones.length)];
-        return new Futbolista(nombre, dorsal, posicion, rendimiento, sueldo);
+        fichajes.agregarFutbolista(f1);
+        fichajes.agregarFutbolista(f2);
+        fichajes.agregarFutbolista(f3);
+        fichajes.agregarFutbolista(f4);
     }
 
     public void listarRivales(ListaClubes clubes){
@@ -868,26 +837,22 @@ public class ControladorMB {
             
     }
     
-    public void guardarPartida(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo) throws IOException{
+    public void guardarPartida(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo, AtomicInteger sesion) throws IOException{
         limpiarArchivo();
         BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo));
         bw.write(emp.getNombre());
         bw.newLine();
         bw.write(club.getNombre()+";"+club.getRendimiento()+";"+club.getPartidosGanados()+";"+club.getPartidosJugados()+";"+club.getCamisetasVendidas()+";"+club.getEntradasVendidas()+";"+club.getCantidadPatrocinadores());
         bw.newLine();
-        for (int i = 0; i<club.getJugadores().size()-1; i++){
+        for (int i = 0; i<club.getJugadores().size(); i++){
             Futbolista temporal = club.getJugadores().get(i);
             bw.write(temporal.getDorsal()+";");
         }
-        Futbolista ultimo = club.getJugadores().get(club.getJugadores().size()-1);
-        bw.write(String.valueOf(ultimo.getDorsal()));
         bw.newLine();
-        for (int i = 0; i<patrocinios.getPatrocinios().size()-1; i++){
+        for (int i = 0; i<patrocinios.getPatrocinios().size(); i++){
             Patrocinio temp = patrocinios.getPatrocinios().get(i);
             bw.write(temp.getNombre()+";"+temp.getPartidosRestantes()+";"+temp.isAsociado()+";");
         }
-        Patrocinio fin = patrocinios.getPatrocinios().get(patrocinios.getPatrocinios().size()-1);
-        bw.write(fin.getNombre()+";"+fin.getPartidosRestantes()+";"+fin.isAsociado());
         bw.newLine();
         bw.write(String.valueOf(emp.getMoralidad()));
         System.out.println(emp.getMoralidad());
@@ -895,30 +860,28 @@ public class ControladorMB {
         bw.write(String.valueOf(emp.getPuntuacion()));
         System.out.println(emp.getPuntuacion());
         bw.newLine();
-        for (int i = 0; i<clubes.getClubes().size()-1; i++){
+        for (int i = 0; i<clubes.getClubes().size(); i++){
             bw.write(clubes.getClubes().get(i).getPartidosJugados()+";");        
         }
-        Club last = clubes.getClubes().get(clubes.getClubes().size()-1);
-        bw.write(String.valueOf(last.getPartidosJugados()));
+        
         bw.newLine();
-        for (int i = 0; i < club.getJugadores().size(); i++){
-            Futbolista jugador = club.getJugadores().get(i);
-            if (i > 0){
-                bw.write(";");
-            }
-            bw.write(jugador.getNombre()+"|"+jugador.getDorsal()+"|"+jugador.getPosicion()+"|"
-                    +jugador.getRendimiento()+"|"+jugador.getSueldo());
+        JTable tablaSim = vista.getPanelSimulacion().getTablaPartido();
+        int cantidadSimulaciones = tablaSim.getRowCount();
+        for (int i = 0; i<cantidadSimulaciones; i++){
+            bw.write(tablaSim.getValueAt(i, 0)+","+tablaSim.getValueAt(i, 1)+","+tablaSim.getValueAt(i, 2)+";");
         }
         bw.newLine();
-        for (int i = 0; i < fichajes.getFutbolistas().size(); i++){
-            Futbolista jugador = fichajes.getFutbolistas().get(i);
-            if (i > 0){
-                bw.write(";");
-            }
-            bw.write(jugador.getNombre()+"|"+jugador.getDorsal()+"|"+jugador.getPosicion()+"|"
-                    +jugador.getRendimiento()+"|"+jugador.getSueldo());
-        }
+        
+        JTable tablaEv = vista.getPanelEventos().getTablaEventos();
+        int cantidadEventos = tablaEv.getRowCount();
+        bw.write(String.valueOf(cantidadEventos));
         bw.newLine();
+        for (int i = 0; i<cantidadEventos; i++){
+            bw.write(sesion+";"+tablaEv.getValueAt(i, 1)+";"+tablaEv.getValueAt(i, 2)+";");
+            bw.newLine();
+        }
+        
+        agregarEvento(sesion, "Guardado", "Sesión guardada");
         bw.close();
     }
 
@@ -931,35 +894,15 @@ public class ControladorMB {
         }
     }
 
+    public void agregarEvento(AtomicInteger sesion, String tipoEvento, String evento){
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEventos().getTablaEventos().getModel();
+        tabla.addRow(new Object[]{sesion, tipoEvento, evento});
+    }
+    
+    public void agregarLineaTabla(JTable tabla, String contenido[]){
+        DefaultTableModel tablaAccesible = (DefaultTableModel) tabla.getModel();
+        tablaAccesible.addRow(new String[]{contenido[0], contenido[1], contenido[2]});
+    }
 
 }
     
-
-
-
-
-
-
-/* 
-        Compra con receta:              [###########]
-        Compra sin receta:              [#####......]
-        Compra de fácil acceso:         [#######....]
-        Solicitud de fabricación:       [#########..]
-
-
-
-        Compra con receta:              [R][E][G][A][V]      
-        Compra sin receta:              [R][E][G]
-        Compra de fácil acceso:         [R][E][G][V]
-        Solicitud de fabricación:       [R][E][G][A]
-
-
-
-
-
-
-
-
-
-
-*/

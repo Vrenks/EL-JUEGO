@@ -30,7 +30,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
     private InformacionRivales informacionRivales;
     private PanelVictoria panelVictoria;
     private PanelDerrota panelDerrota;
-
+    private PanelEventos panelEventos;
     
     /**
      * Creates new form VisualizadorMB
@@ -53,6 +53,7 @@ public class VisualizadorMB extends javax.swing.JFrame {
         informacionRivales = new InformacionRivales();
         panelVictoria = new PanelVictoria();
         panelDerrota = new PanelDerrota();
+        panelEventos = new PanelEventos();
         
         
         contenedor.add(panelInicio, "INICIO");
@@ -68,12 +69,14 @@ public class VisualizadorMB extends javax.swing.JFrame {
         contenedor.add(informacionRivales, "INFORMACION RIVALES");
         contenedor.add(panelVictoria, "VICTORIA");
         contenedor.add(panelDerrota, "DERROTA");
+        contenedor.add(panelEventos, "EVENTOS");
         cardlayout.show(contenedor, "INICIO");
         
+        
         setContentPane(contenedor);
-        setSize(900, 650);
-        setLocationRelativeTo(null);
-
+        
+        
+        
     }
 
     /**
@@ -169,6 +172,16 @@ public class VisualizadorMB extends javax.swing.JFrame {
     public void setPanelDerrota(PanelDerrota panelDerrota) {
         this.panelDerrota = panelDerrota;
     }
+
+    public PanelEventos getPanelEventos() {
+        return panelEventos;
+    }
+
+    public void setPanelEventos(PanelEventos panelEventos) {
+        this.panelEventos = panelEventos;
+    }
+    
+    
 
     public void mostrarPantalla(String nombre){
         cardlayout.show(contenedor, nombre);
