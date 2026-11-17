@@ -22,7 +22,7 @@ public class MONEYBALL {
         VisualizadorMB vista = new VisualizadorMB(); 
         Empresario emp = new Empresario("", 1000000, 0);
         Club club = new Club("", 54, 0, 0, "", 0, 0, 0);
-        ControladorMB c = new ControladorMB(vista, emp, club);
+        ControladorMB c = new ControladorMB(vista, emp, club, 0);
         java.awt.EventQueue.invokeLater(() -> vista.setVisible(true));
     }
     

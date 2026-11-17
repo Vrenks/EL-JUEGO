@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.awt.event.ActionListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.table.DefaultTableModel;
 import modelo.Club;
 import modelo.Empresario;
@@ -33,15 +35,23 @@ import vista.VisualizadorMB;
 public class ControladorMB {
     
     private static final int MAX_JUGADORES_PLANTILLA = 11;
+    private static final Path ARCHIVO_MEJOR_PUNTUACION = Paths.get(
+            System.getProperty("user.home"), ".moneyball-highscore");
     private VisualizadorMB vista;
     private Empresario emp; 
     private Club club;
-    
+    private final AtomicInteger sesion = new AtomicInteger(1);
+    private int highScore;
     
     public ControladorMB(VisualizadorMB vista, Empresario emp, Club club) {
+        this(vista, emp, club, 0);
+    }
+
+    public ControladorMB(VisualizadorMB vista, Empresario emp, Club club, int highScore) {
         this.vista=vista;
         this.emp=emp;
         this.club=club;
+        this.highScore=leerMejorPuntuacion(highScore);
         ListaPatrocinios patrocinios = new ListaPatrocinios();
         ListaClubes clubes = new ListaClubes();
         ListaFichajes fichajes = new ListaFichajes();
@@ -96,6 +106,12 @@ public class ControladorMB {
         vista.getPanelVictoria().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
         vista.getPanelVictoria().getBtnSalir().addActionListener(e->System.exit(0));
 
+        vista.getPanelGestion().getBtnEventos().addActionListener(e->{
+            vista.getPanelEventos().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
+            vista.mostrarPantalla("EVENTOS");
+        });
+        vista.getPanelEventos().getBtnEventosAGestion().addActionListener(e->gestionar(emp));
+
         
         
     }
@@ -124,6 +140,18 @@ public class ControladorMB {
             String [] linea7 = br.readLine().split(";"); 
             String linea8 = br.readLine();
             String linea9 = br.readLine();
+            boolean formatoAnteriorConEventos = linea9 != null
+                    && linea9.trim().matches("\\d+")
+                    && (linea8 == null || !linea8.contains("|"));
+            String linea10 = formatoAnteriorConEventos ? null : br.readLine();
+            int cantidadEventos = formatoAnteriorConEventos
+                    ? Integer.parseInt(linea9.trim())
+                    : linea10 == null || linea10.trim().isEmpty() ? 0 : Integer.parseInt(linea10.trim());
+
+            DefaultTableModel tablaPartidos = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
+            DefaultTableModel tablaEventos = (DefaultTableModel) vista.getPanelEventos().getTablaEventos().getModel();
+            tablaPartidos.setRowCount(0);
+            tablaEventos.setRowCount(0);
 
             String nombreEmpresario = linea1[0];
             String nombreClub = linea2[0];
@@ -152,6 +180,50 @@ public class ControladorMB {
             for (int i = 0; i<15; i++){
                 rivalesJugados[i]=Integer.parseInt(linea7[i]);
             }
+            if (formatoAnteriorConEventos && linea8 != null && !linea8.isEmpty()){
+                for (String registro : linea8.split(";")){
+                    if (registro.isEmpty()){
+                        continue;
+                    }
+                    String[] datosPartido = registro.split(",", 3);
+                    if (datosPartido.length == 3){
+                        tablaPartidos.addRow(new Object[]{Integer.parseInt(datosPartido[0]),
+                            datosPartido[1], datosPartido[2]});
+                    }
+                }
+            }
+            int ultimaSesion = 0;
+            for (int i = 0; i < cantidadEventos; i++){
+                String registro = br.readLine();
+                if (registro == null){
+                    throw new IOException("El archivo de guardado está incompleto en el historial de eventos.");
+                }
+                String[] datosEvento = registro.split(";", 3);
+                if (datosEvento.length < 3){
+                    throw new IOException("El historial de eventos del archivo de guardado no es válido.");
+                }
+                int numeroSesion = Integer.parseInt(datosEvento[0]);
+                ultimaSesion = Math.max(ultimaSesion, numeroSesion);
+                tablaEventos.addRow(new Object[]{numeroSesion, datosEvento[1], datosEvento[2]});
+            }
+            if (!formatoAnteriorConEventos && linea10 != null){
+                String lineaCantidadPartidos = br.readLine();
+                if (lineaCantidadPartidos != null && !lineaCantidadPartidos.trim().isEmpty()){
+                    int cantidadPartidosGuardados = Integer.parseInt(lineaCantidadPartidos.trim());
+                    for (int i = 0; i < cantidadPartidosGuardados; i++){
+                        String registro = br.readLine();
+                        if (registro == null){
+                            throw new IOException("El archivo de guardado está incompleto en el historial de partidos.");
+                        }
+                        String[] datosPartido = registro.split(";", 3);
+                        if (datosPartido.length < 3){
+                            throw new IOException("El historial de partidos del archivo de guardado no es válido.");
+                        }
+                        tablaPartidos.addRow(new Object[]{Integer.parseInt(datosPartido[0]),
+                            datosPartido[1], datosPartido[2]});
+                    }
+                }
+            }
             
             clubBase(club, nombreClub);
             opcionesFichaje(club, nombreClub, fichajes);
@@ -169,7 +241,7 @@ public class ControladorMB {
             club.setDificultad(nombreClub);
             ArrayList<Futbolista> titulares = new ArrayList<>(club.getJugadores());
             club.getJugadores().clear();
-            if (linea8 != null && !linea8.isEmpty()){
+            if (!formatoAnteriorConEventos && linea8 != null && !linea8.isEmpty()){
                 for (String registro : linea8.split(";")){
                     String[] datos = registro.split("\\|", -1);
                     Futbolista jugador = new Futbolista(datos[0], Integer.parseInt(datos[1]),
@@ -196,7 +268,7 @@ public class ControladorMB {
                 }
             }
             club.setRendimiento(rendimiento);
-            if (linea9 != null && !linea9.isEmpty()){
+            if (!formatoAnteriorConEventos && linea9 != null && !linea9.isEmpty()){
                 fichajes.getFutbolistas().clear();
                 for (String registro : linea9.split(";")){
                     String[] datos = registro.split("\\|", -1);
@@ -208,6 +280,8 @@ public class ControladorMB {
                     actualizarMercadoFichajes(nombreClub, fichajes, ciclo);
                 }
             }
+            sesion.set(ultimaSesion + 1);
+            agregarEvento("Carga", "Sesión cargada");
 
             for (Patrocinio p : new ArrayList<>(patrocinios.getPatrocinios())){
                 int indice = -1;
@@ -266,6 +340,9 @@ public class ControladorMB {
         clubBase(club, nombreClub);
         crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
         opcionesFichaje(club, nombreClub, fichajes);
+        String[] nombreLiga = dificultad.split("\\(");
+        agregarEvento("Creación", nombreEmpresario + " ahora es presidente de " + nombreClub
+                + " en la " + nombreLiga[0].trim() + ".");
         //transicion exitosa
         gestionar(emp);
     }
@@ -368,16 +445,21 @@ public class ControladorMB {
             resultado = club.getNombre()+": "+ diferenciaGoles + "-0";
             club.setPartidosGanados(club.getPartidosGanados()+1);
             ventasRendimiento(diferenciaGoles, club, emp);
+            agregarEvento("Simulación", club.getNombre() + " le ganó " + diferenciaGoles
+                    + "-0 a " + rival.getNombre());
 
         }else if (rival.getRendimiento()>club.getRendimiento()){
             diferenciaRendimiento=rival.getRendimiento()-club.getRendimiento();
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
             ventasRendimiento(diferenciaGoles*-1, club, emp);
+            agregarEvento("Simulación", club.getNombre() + " perdió 0-" + diferenciaGoles
+                    + " con " + rival.getNombre());
         }
         else{ 
             diferenciaGoles = 0;
             resultado = "Empate: 0-0";
+            agregarEvento("Simulación", club.getNombre() + " empató 0-0 con " + rival.getNombre());
         }
 
         rival.setPartidosJugados(rival.getPartidosJugados()+1);
@@ -401,6 +483,8 @@ public class ControladorMB {
                     club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()-1);
                     emp.setPuntuacion(emp.getPuntuacion()-(patrocinio.getInversion()/2));
                     vista.mostrarInformacion("El patrocinador '"+patrocinio.getNombre()+"' ha abandonado el equipo. Fue compensado con $"+patrocinio.getInversion()/2, "INFORMACION IMPORTANTE");
+                    agregarEvento("Patrocinio", "El patrocinador '" + patrocinio.getNombre()
+                            + "' abandonó el equipo. Compensación: $" + patrocinio.getInversion() / 2);
                     patrocinios.borrarPatrocinio(patrocinio);
                 }
             }
@@ -418,6 +502,7 @@ public class ControladorMB {
                 sueldos+=futbolista.getSueldo();
             }
             vista.mostrarInformacion("Sueldos cobrados: $"+sueldos, "INFORMACION IMPORTANTE");
+            agregarEvento("Sueldos", "Se cobraron $" + sueldos + " por los sueldos de los jugadores.");
         }
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         revisarDerrota(emp);
@@ -439,6 +524,9 @@ public class ControladorMB {
     }
     
     public void patrocinar(ListaPatrocinios patrocinios, Empresario emp, Club club){
+        for (ActionListener listener : vista.getPanelPatrocinios().getBtnElegirPatrocinador().getActionListeners()){
+            vista.getPanelPatrocinios().getBtnElegirPatrocinador().removeActionListener(listener);
+        }
         revisarDerrota(emp);
         vista.getPanelPatrocinios().getLblPuntuacion2().setText(String.valueOf(emp.getPuntuacion()));
         Random rand = new Random();
@@ -477,6 +565,9 @@ public class ControladorMB {
                 String nombrePatrocinadorElegido = vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 0).toString();
                 Patrocinio patrocinio=patrocinios.buscarPatrocinio(nombrePatrocinadorElegido);
                 patrocinio.setAsociado(true);
+                agregarEvento("Patrocinio", club.getNombre() + " eligió a " + patrocinio.getNombre()
+                        + " como patrocinador. Inversión: " + patrocinio.getInversion()
+                        + " Moralidad: " + patrocinio.getMoralidad());
                 int moralidadPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 2);
                 int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
                 emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
@@ -505,6 +596,7 @@ public class ControladorMB {
     
     public void cambiar(Empresario emp){
         ListarJugadores(club);
+        vista.getPanelCambiarJugador().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
         vista.mostrarPantalla("CAMBIAR JUGADOR");
 
     }
@@ -574,6 +666,8 @@ public class ControladorMB {
         }
         club.agregarJugador(jugador);
         fichajes.borrarFutbolista(jugador);
+        agregarEvento("Fichaje", club.getNombre() + " fichó a " + jugador.getNombre()
+                + ". Sueldo: " + jugador.getSueldo() + ", rendimiento: " + jugador.getRendimiento());
         //borrado visual de la tabla
         tabla.removeRow(fila);
         revisarDerrota(emp);
@@ -609,6 +703,8 @@ public class ControladorMB {
         }
 
         club.despedirJugador(jugador);
+        agregarEvento("Despido", club.getNombre() + " despidió a " + jugador.getNombre()
+                + " por decisión de " + emp.getNombre() + ".");
         ListarJugadores(club);
     }
     
@@ -860,7 +956,18 @@ public class ControladorMB {
     public void revisarVictoria(Club club, Empresario emp){
         revisarDerrota(emp);
         vista.getPanelVictoria().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
+        vista.getPanelVictoria().getLblHighScore().setText(String.valueOf(highScore));
         if (club.getPartidosJugados()>=15){
+            if (emp.getPuntuacion() > highScore){
+                highScore = emp.getPuntuacion();
+                vista.getPanelVictoria().getLblHighScore().setText(String.valueOf(highScore));
+                try {
+                    Files.writeString(ARCHIVO_MEJOR_PUNTUACION, String.valueOf(highScore));
+                } catch (IOException e) {
+                    vista.mostrarError("No se pudo guardar la mejor puntuación histórica: " + e.getMessage(),
+                            "Error al guardar récord");
+                }
+            }
             File archivo = new File("memoryCard.txt");
             archivo.delete();
             vista.mostrarPantalla("VICTORIA");
@@ -870,6 +977,7 @@ public class ControladorMB {
     
     public void guardarPartida(Empresario emp, Club club, ListaClubes clubes, ListaPatrocinios patrocinios, ListaFichajes fichajes, String nombreArchivo) throws IOException{
         limpiarArchivo();
+        agregarEvento("Guardado", "Sesión guardada");
         BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo));
         bw.write(emp.getNombre());
         bw.newLine();
@@ -919,7 +1027,51 @@ public class ControladorMB {
                     +jugador.getRendimiento()+"|"+jugador.getSueldo());
         }
         bw.newLine();
+        DefaultTableModel tablaEventos = (DefaultTableModel) vista.getPanelEventos().getTablaEventos().getModel();
+        bw.write(String.valueOf(tablaEventos.getRowCount()));
+        bw.newLine();
+        for (int i = 0; i < tablaEventos.getRowCount(); i++){
+            bw.write(tablaEventos.getValueAt(i, 0) + ";"
+                    + limpiarCampoGuardado(tablaEventos.getValueAt(i, 1).toString()) + ";"
+                    + limpiarCampoGuardado(tablaEventos.getValueAt(i, 2).toString()));
+            bw.newLine();
+        }
+        DefaultTableModel tablaPartidos = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
+        bw.write(String.valueOf(tablaPartidos.getRowCount()));
+        bw.newLine();
+        for (int i = 0; i < tablaPartidos.getRowCount(); i++){
+            bw.write(tablaPartidos.getValueAt(i, 0) + ";"
+                    + limpiarCampoGuardado(tablaPartidos.getValueAt(i, 1).toString()) + ";"
+                    + limpiarCampoGuardado(tablaPartidos.getValueAt(i, 2).toString()));
+            bw.newLine();
+        }
         bw.close();
+    }
+
+    private int leerMejorPuntuacion(int valorInicial){
+        if (!Files.exists(ARCHIVO_MEJOR_PUNTUACION)){
+            return valorInicial;
+        }
+        try {
+            String contenido = Files.readString(ARCHIVO_MEJOR_PUNTUACION).trim();
+            return contenido.isEmpty() ? valorInicial : Math.max(valorInicial, Integer.parseInt(contenido));
+        } catch (IOException | NumberFormatException e) {
+            vista.mostrarError("No se pudo leer la mejor puntuación histórica: " + e.getMessage(),
+                    "Error al cargar récord");
+            return valorInicial;
+        }
+    }
+
+    private String limpiarCampoGuardado(String valor){
+        return valor.replace(';', ',').replace('\n', ' ').replace('\r', ' ');
+    }
+
+    public int getHighScore(){
+        return highScore;
+    }
+
+    public void setHighScore(int highScore){
+        this.highScore = highScore;
     }
 
     public void limpiarArchivo(){
@@ -929,6 +1081,11 @@ public class ControladorMB {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void agregarEvento(String tipoEvento, String evento){
+        DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEventos().getTablaEventos().getModel();
+        tabla.addRow(new Object[]{sesion.get(), limpiarCampoGuardado(tipoEvento), limpiarCampoGuardado(evento)});
     }
 
 

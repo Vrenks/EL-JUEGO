@@ -105,7 +105,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="LblPuntuacion2" min="-2" max="-2" attributes="0"/>
+                  <Component id="LblPuntuacion" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -116,7 +116,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="LblPuntuacion2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="LblPuntuacion" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
@@ -129,7 +129,7 @@
             <Property name="text" type="java.lang.String" value="Puntuaci&#xf3;n: "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="LblPuntuacion2">
+        <Component class="javax.swing.JLabel" name="LblPuntuacion">
           <Properties>
             <Property name="text" type="java.lang.String" value="placeHolder"/>
           </Properties>
