@@ -254,10 +254,10 @@ public class Club {
     public void ventasMoralidad(Club club, Empresario emp){
         int camisetas = emp.getMoralidad()*100;
         club.setCamisetasVendidas(club.getCamisetasVendidas()+camisetas);
-        emp.setPuntuacion(emp.getPuntuacion()+camisetas*50);
+        emp.setPuntuacion(emp.getPuntuacion()+camisetas*200);
         int entradas = emp.getMoralidad() * 300;
         club.setEntradasVendidas(club.getEntradasVendidas()+entradas);
-        emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
+        emp.setPuntuacion(emp.getPuntuacion()+entradas*60);
     }
 
     public void opcionesFichaje(Club club, String nombreClub, ListaFichajes fichajes){

@@ -366,7 +366,6 @@ public class ControladorMB {
     public void simular(ListaPatrocinios patrocinios, ListaFichajes fichajes, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
         revisarDerrota(emp);
         revisarVictoria(club, emp);
-
         Club rival;
         do{
             Random rivalRand = new Random();
@@ -388,7 +387,7 @@ public class ControladorMB {
             diferenciaRendimiento=rival.getRendimiento()-club.getRendimiento();
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
-            int castigo = diferenciaGoles*-10;
+            int castigo = diferenciaGoles*-7;
             club.ventasRendimiento(castigo, club, emp);
             agregarEvento("Simulación", club.getNombre() + " perdió 0-" + diferenciaGoles
                     + " con " + rival.getNombre());
