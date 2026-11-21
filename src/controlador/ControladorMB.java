@@ -100,10 +100,10 @@ public class ControladorMB {
         
         vista.getPanelCambiarJugador().getBtnCambiarJugadorAModificacion().addActionListener(e->modificar(emp));
 
-        vista.getPanelDerrota().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
+        // eliminar boton: vista.getPanelDerrota().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
         vista.getPanelDerrota().getBtnSalir().addActionListener(e->System.exit(0));
 
-        vista.getPanelVictoria().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
+        // eliminar boton: vista.getPanelVictoria().getBtnVolverAlInicio().addActionListener(e->vista.mostrarPantalla("INICIO"));
         vista.getPanelVictoria().getBtnSalir().addActionListener(e->System.exit(0));
 
         vista.getPanelGestion().getBtnEventos().addActionListener(e->{
@@ -226,8 +226,8 @@ public class ControladorMB {
             }
             
             clubBase(club, nombreClub);
-            opcionesFichaje(club, nombreClub, fichajes);
-            crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
+            club.opcionesFichaje(club, nombreClub, fichajes);
+            clubes.crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
             emp.setNombre(nombreEmpresario);
             emp.setPuntuacion(puntuacion);
             emp.setMoralidad(moralidad);
@@ -277,7 +277,7 @@ public class ControladorMB {
                 }
             }else{
                 for (int ciclo = 1; ciclo <= partidosJugados / 3; ciclo++){
-                    actualizarMercadoFichajes(nombreClub, fichajes, ciclo);
+                    club.actualizarMercadoFichajes(nombreClub, fichajes, ciclo);
                 }
             }
             sesion.set(ultimaSesion + 1);
@@ -318,6 +318,7 @@ public class ControladorMB {
     
     
     public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
+        
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText().trim();
         //validacion para que el nombre no este vacio
         if(nombreEmpresario.isEmpty()){
@@ -338,8 +339,8 @@ public class ControladorMB {
         club.setNombre(nombreClub);
         club.setDificultad(nombreClub);
         clubBase(club, nombreClub);
-        crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
-        opcionesFichaje(club, nombreClub, fichajes);
+        clubes.crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
+        club.opcionesFichaje(club, nombreClub, fichajes);
         String[] nombreLiga = dificultad.split("\\(");
         agregarEvento("Creación", nombreEmpresario + " ahora es presidente de " + nombreClub
                 + " en la " + nombreLiga[0].trim() + ".");
@@ -386,15 +387,15 @@ public class ControladorMB {
         }
 
 
-        Futbolista f1 = new Futbolista(f1Nombre, 1, "Arquero", 6, 10000);
-        Futbolista f2 = new Futbolista(f2Nombre, 2, "Central derecho", 6, 10000);
-        Futbolista f3 = new Futbolista(f3Nombre, 3, "Lateral izquierdo", 6, 10000);
-        Futbolista f4 = new Futbolista(f4Nombre, 4, "Lateral derecho", 6, 10000);
-        Futbolista f5 = new Futbolista(f5Nombre, 5, "Mediocentro defensivo", 6, 10000);
-        Futbolista f6 = new Futbolista(f6Nombre, 6, "Central izquierdo", 6, 10000);
-        Futbolista f7 = new Futbolista(f7Nombre, 7, "Extremo derecho", 6, 10000);
-        Futbolista f8 = new Futbolista(f8Nombre, 8, "Volante", 6, 10000);
-        Futbolista f9 = new Futbolista(f9Nombre, 9, "Delantero", 6, 10000);
+        Futbolista f1 = new Futbolista(f1Nombre, 1, "Arquero", 5, 10000);
+        Futbolista f2 = new Futbolista(f2Nombre, 2, "Central derecho", 4, 10000);
+        Futbolista f3 = new Futbolista(f3Nombre, 3, "Lateral izquierdo", 3, 10000);
+        Futbolista f4 = new Futbolista(f4Nombre, 4, "Lateral derecho", 5, 10000);
+        Futbolista f5 = new Futbolista(f5Nombre, 5, "Mediocentro defensivo", 4, 10000);
+        Futbolista f6 = new Futbolista(f6Nombre, 6, "Central izquierdo", 2, 10000);
+        Futbolista f7 = new Futbolista(f7Nombre, 7, "Extremo derecho", 5, 10000);
+        Futbolista f8 = new Futbolista(f8Nombre, 8, "Volante", 4, 10000);
+        Futbolista f9 = new Futbolista(f9Nombre, 9, "Delantero", 5, 10000);
         
         club.agregarJugador(f1);
         club.agregarJugador(f2);
@@ -444,7 +445,7 @@ public class ControladorMB {
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = club.getNombre()+": "+ diferenciaGoles + "-0";
             club.setPartidosGanados(club.getPartidosGanados()+1);
-            ventasRendimiento(diferenciaGoles, club, emp);
+            club.ventasRendimiento(diferenciaGoles, club, emp);
             agregarEvento("Simulación", club.getNombre() + " le ganó " + diferenciaGoles
                     + "-0 a " + rival.getNombre());
 
@@ -452,7 +453,8 @@ public class ControladorMB {
             diferenciaRendimiento=rival.getRendimiento()-club.getRendimiento();
             diferenciaGoles = rand.nextInt(diferenciaRendimiento)+1;
             resultado = rival.getNombre()+": "+ "0-"+ diferenciaGoles;
-            ventasRendimiento(diferenciaGoles*-1, club, emp);
+            int castigo = diferenciaGoles*-10;
+            club.ventasRendimiento(castigo, club, emp);
             agregarEvento("Simulación", club.getNombre() + " perdió 0-" + diferenciaGoles
                     + " con " + rival.getNombre());
         }
@@ -472,7 +474,7 @@ public class ControladorMB {
         vista.mostrarPantalla("SIMULACION");
         club.setPartidosJugados(club.getPartidosJugados()+1);
         if (club.getPartidosJugados() % 3 == 0){
-            actualizarMercadoFichajes(club.getNombre(), fichajes, club.getPartidosJugados() / 3);
+            club.actualizarMercadoFichajes(club.getNombre(), fichajes, club.getPartidosJugados() / 3);
             vista.mostrarInformacion("El rendimiento de los jugadores disponibles en el mercado cambió.",
                     "Mercado de fichajes");
         }
@@ -494,7 +496,7 @@ public class ControladorMB {
             if (eleccion!=0)
                 return;
             patrocinar(patrocinios, emp, club);
-            ventasMoralidad(club, emp);
+            club.ventasMoralidad(club, emp);
         }
         if (club.getPartidosJugados()!=0&&club.getPartidosJugados()%4==0){
             int sueldos = 0;
@@ -536,7 +538,7 @@ public class ControladorMB {
         while (condicion){
             numAleatorio1 = rand.nextInt(patrocinios.getPatrocinios().size());
             numAleatorio2 = rand.nextInt(patrocinios.getPatrocinios().size());
-            if (!patrocinios.getPatrocinios().get(numAleatorio1).isAsociado()||!patrocinios.getPatrocinios().get(numAleatorio2).isAsociado())
+            if (!patrocinios.getPatrocinios().get(numAleatorio1).isAsociado()&&!patrocinios.getPatrocinios().get(numAleatorio2).isAsociado()&&numAleatorio1!=numAleatorio2)
                 break;
         }
         Patrocinio p1;
@@ -572,6 +574,7 @@ public class ControladorMB {
                 int inversionPatrocinadorElegido = (int) vista.getPanelPatrocinios().getTablaPatrocinadores().getValueAt(fila, 1);
                 emp.setMoralidad(emp.getMoralidad()+moralidadPatrocinadorElegido);
                 emp.setPuntuacion(inversionPatrocinadorElegido+emp.getPuntuacion());
+                vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
                 club.setCantidadPatrocinadores(club.getCantidadPatrocinadores()+1);
                 vista.mostrarPantalla("SIMULACION");
             }  
@@ -708,228 +711,6 @@ public class ControladorMB {
         ListarJugadores(club);
     }
     
-    public void crearClubesYPatrocinios(ListaClubes clubes, ListaClubes clubesCopia, String nombreClub, ListaPatrocinios patrocinios){
-        Club c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15;
-        if (nombreClub.equals("Liverpool")){
-            c1= new Club("Arsenal", 62, 0, 0, "", 0, 0, 0); 
-            c2= new Club("Manchester City", 60, 0, 0, "", 0, 0, 0); 
-            c3= new Club("Aston Villa", 58, 0, 0,  "", 0, 0, 0); 
-            c4= new Club("Chelsea", 57, 0, 0, "", 0, 0, 0);
-            c5= new Club("Newcastle United", 56, 0, 0, "", 0, 0, 0);
-            c6= new Club("Tottenham", 54, 0, 0, "", 0, 0, 0);
-            c7= new Club("Manchester United", 53, 0, 0, "", 0, 0, 0); 
-            c8= new Club("Crystal Palace", 52, 0, 0, "", 0, 0, 0); 
-            c9= new Club("Everton", 52, 0, 0, "", 0, 0, 0); 
-            c10= new Club("Brighton", 51, 0, 0, "", 0, 0, 0);
-            c11= new Club("Fulham", 50, 0, 0, "", 0, 0, 0); 
-            c12= new Club("Nottingham Forest", 48, 0, 0, "", 0, 0, 0); 
-            c13= new Club("Coventry City", 47, 0, 0, "", 0, 0, 0); 
-            c14= new Club("Bournemouth", 47, 0, 0, "", 0, 0, 0);  
-            c15= new Club("Sunderland AFC", 45, 0, 0, "", 0, 0, 0);
-        }else if(nombreClub.equals("Inter")){
-            c1= new Club("Lazio", 62, 0, 0, "", 0, 0, 0); 
-            c2= new Club("Juventus", 60, 0, 0, "", 0, 0, 0); 
-            c3= new Club("Milan", 58, 0, 0, "", 0, 0, 0); 
-            c4= new Club("Roma", 57, 0, 0, "", 0, 0, 0);
-            c5= new Club("Como 1907", 56, 0, 0, "", 0, 0, 0);
-            c6= new Club("Napoli", 56, 0, 0, "", 0, 0, 0);
-            c7= new Club("Torino", 55, 0, 0, "", 0, 0, 0); 
-            c8= new Club("Bolonia", 55, 0, 0, "", 0, 0, 0); 
-            c9= new Club("Lecce", 52, 0, 0, "", 0, 0, 0); 
-            c10= new Club("Atalanta", 51, 0, 0, "", 0, 0, 0);
-            c11= new Club("Genoa", 50, 0, 0, "", 0, 0, 0); 
-            c12= new Club("Cagliari", 50, 0, 0, "", 0, 0, 0); 
-            c13= new Club("Venezia", 49, 0, 0, "", 0, 0, 0); 
-            c14= new Club("Udinese", 49, 0, 0, "", 0, 0, 0);  
-            c15= new Club("Fiorentina", 46, 0, 0, "", 0, 0, 0);
-        }else{
-            c1= new Club("U. de Chile", 66, 0, 0, "", 0, 0, 0); 
-            c2= new Club("U. Catolica", 64, 0, 0, "", 0, 0, 0); 
-            c3= new Club("Everton", 63, 0, 0, "", 0, 0, 0); 
-            c4= new Club("Palestino", 63, 0, 0, "", 0, 0, 0);
-            c5= new Club("Deportes Limache", 62, 0, 0, "", 0, 0, 0);
-            c6= new Club("Coquimbo Unido", 62, 0, 0, "", 0, 0, 0);
-            c7= new Club("Huachipato", 60, 0, 0, "", 0, 0, 0); 
-            c8= new Club("La Serena", 59, 0, 0, "", 0, 0, 0); 
-            c9= new Club("Deportes Concepcion", 58, 0, 0, "", 0, 0, 0); 
-            c10= new Club("Audax Italiano", 56, 0, 0, "", 0, 0, 0);
-            c11= new Club("O.Higgins", 56, 0, 0, "", 0, 0, 0); 
-            c12= new Club("Cobresal", 56, 0, 0, "", 0, 0, 0); 
-            c13= new Club("U. de Conce", 55, 0, 0, "", 0, 0, 0); 
-            c14= new Club("Union La Calera", 54, 0, 0, "", 0, 0, 0);  
-            c15= new Club("Ñublense", 53, 0, 0, "", 0, 0, 0);
-        }
-
-        clubes.agregarClub(c1);
-        clubes.agregarClub(c2);
-        clubes.agregarClub(c3);
-        clubes.agregarClub(c4);
-        clubes.agregarClub(c5);
-        clubes.agregarClub(c6);
-        clubes.agregarClub(c7);
-        clubes.agregarClub(c8);
-        clubes.agregarClub(c9);
-        clubes.agregarClub(c10);
-        clubes.agregarClub(c11);
-        clubes.agregarClub(c12);
-        clubes.agregarClub(c13);
-        clubes.agregarClub(c14);
-        clubes.agregarClub(c15);
-
-        Club cc1, cc2, cc3, cc4, cc5, cc6, cc7, cc8, cc9, cc10, cc11, cc12, cc13, cc14, cc15;
-            cc1 = new Club(c1.getNombre(), c1.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc2 = new Club(c2.getNombre(), c2.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc3 = new Club(c3.getNombre(), c3.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc4 = new Club(c4.getNombre(), c4.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc5 = new Club(c5.getNombre(), c5.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc6 = new Club(c6.getNombre(), c6.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc7 = new Club(c7.getNombre(), c7.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc8 = new Club(c8.getNombre(), c8.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc9 = new Club(c9.getNombre(), c9.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc10 = new Club(c10.getNombre(), c10.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc11 = new Club(c11.getNombre(), c11.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc12 = new Club(c12.getNombre(), c12.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc13 = new Club(c13.getNombre(), c13.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc14 = new Club(c14.getNombre(), c14.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-            cc15 = new Club(c15.getNombre(), c15.getRendimiento(), 0, 0, nombreClub, 0, 0, 0);
-        
-        clubesCopia.agregarClub(cc1);
-        clubesCopia.agregarClub(cc2);
-        clubesCopia.agregarClub(cc3);
-        clubesCopia.agregarClub(cc4);
-        clubesCopia.agregarClub(cc5);
-        clubesCopia.agregarClub(cc6);
-        clubesCopia.agregarClub(cc7);
-        clubesCopia.agregarClub(cc8);
-        clubesCopia.agregarClub(cc9);
-        clubesCopia.agregarClub(cc10);
-        clubesCopia.agregarClub(cc11);
-        clubesCopia.agregarClub(cc12);
-        clubesCopia.agregarClub(cc13);
-        clubesCopia.agregarClub(cc14);
-        clubesCopia.agregarClub(cc15);
-
-        Patrocinio p1 = new Patrocinio("Apple", 0, 270000, 6);
-        Patrocinio p2 = new Patrocinio("UNICEF", 4, 80000, 6);
-        Patrocinio p3 = new Patrocinio("LATAM", 2, 150000, 6);
-        Patrocinio p4 = new Patrocinio("OpenAI", -1, 120000, 6);
-        Patrocinio p5 = new Patrocinio("Betano", -3, 200000, 6);
-        Patrocinio p6 = new Patrocinio("Tel Aviv Inver-sionistas", -5, 400000, 6);
-        
-        patrocinios.agregarPatrocinio(p1);
-        patrocinios.agregarPatrocinio(p2);
-        patrocinios.agregarPatrocinio(p3);
-        patrocinios.agregarPatrocinio(p4);
-        patrocinios.agregarPatrocinio(p5);
-        patrocinios.agregarPatrocinio(p6);
-
-    }
-    
-    public void ventasRendimiento(int diferenciaGoles, Club club, Empresario emp){
-        int camisetas = diferenciaGoles*300;
-        club.setCamisetasVendidas(club.getCamisetasVendidas()+camisetas);
-        emp.setPuntuacion(emp.getPuntuacion()+camisetas*50);
-        int entradas = diferenciaGoles * 600;
-        club.setEntradasVendidas(club.getEntradasVendidas()+entradas);
-        emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
-    }
-
-    public void ventasMoralidad(Club club, Empresario emp){
-        int camisetas = emp.getMoralidad()*100;
-        club.setCamisetasVendidas(club.getCamisetasVendidas()+camisetas);
-        emp.setPuntuacion(emp.getPuntuacion()+camisetas*50);
-        int entradas = emp.getMoralidad() * 300;
-        club.setEntradasVendidas(club.getEntradasVendidas()+entradas);
-        emp.setPuntuacion(emp.getPuntuacion()+entradas*10);
-    }
-
-    public void opcionesFichaje(Club club, String nombreClub, ListaFichajes fichajes){
-        fichajes.getFutbolistas().clear();
-        Futbolista[] opciones;
-        if (nombreClub.equals("Liverpool")){
-            opciones = new Futbolista[]{
-                new Futbolista("Florian Wirtz", 10, "Mediapunta", 7, 40000),
-                new Futbolista("Victor Munoz", 11, "Extremo izquierdo", 10, 70000),
-                new Futbolista("Dominik Szoboslai", 12, "Mediapunta", 6, 25000),
-                new Futbolista("Hugo Ekitike", 13, "Delantero", 4, 9000)
-            };
-        }else if (nombreClub.equals("Inter")){
-            opciones = new Futbolista[]{
-                new Futbolista("Pio Esposito", 10, "Mediapunta", 6, 50000),
-                new Futbolista("Carlos Augusto", 11, "Extremo izquierdo", 10, 90000),
-                new Futbolista("Petar Sucic", 12, "Volante", 4, 30000),
-                new Futbolista("Henrikh Mkhtitaryan", 13, "Volante", 8, 60000)
-            };
-        }else{
-            opciones = new Futbolista[]{
-                new Futbolista("Leandro Hernandez", 10, "Mediapunta", 4, 60000),
-                new Futbolista("Francisco Marchant", 11, "Extremo izquierdo", 8, 100000),
-                new Futbolista("Ivan Roman", 12, "Central derrecho", 6, 80000),
-                new Futbolista("Matias Fernandez", 14, "Volante", 10, 120000)
-            };
-        }
-        club.agregarJugador(opciones[0]);
-        club.agregarJugador(opciones[1]);
-        fichajes.agregarFutbolista(opciones[2]);
-        fichajes.agregarFutbolista(opciones[3]);
-        for (int dorsal = 15; dorsal < 25; dorsal++){
-            fichajes.agregarFutbolista(generarJugadorMercado(club, nombreClub, dorsal, fichajes, 0));
-        }
-    }
-
-    private void actualizarMercadoFichajes(String nombreClub, ListaFichajes fichajes, int cicloMercado){
-        for (Futbolista jugador : fichajes.getFutbolistas()){
-            Random aleatorio = new Random(nombreClub.hashCode() * 31L
-                    + jugador.getNombre().hashCode() + jugador.getDorsal() + cicloMercado * 1009L);
-            int nuevoRendimiento = 4 + aleatorio.nextInt(5);
-            if (nuevoRendimiento == jugador.getRendimiento()){
-                nuevoRendimiento = nuevoRendimiento == 8 ? 4 : nuevoRendimiento + 1;
-            }
-            jugador.setRendimiento(nuevoRendimiento);
-        }
-    }
-
-    private Futbolista generarJugadorMercado(Club club, String nombreClub, int dorsal, ListaFichajes fichajes, int cicloMercado){
-        String[] nombres;
-        String[] apellidos;
-        String[] posiciones = {
-            "Arquero", "Central derecho", "Lateral izquierdo", "Lateral derecho",
-            "Mediocentro defensivo", "Central izquierdo", "Extremo derecho",
-            "Volante", "Delantero", "Mediapunta", "Extremo izquierdo"
-        };
-        if (nombreClub.equals("Liverpool")){
-            nombres = new String[]{"Oliver", "Harry", "Jack", "George", "Thomas", "Charlie", "James", "Oscar"};
-            apellidos = new String[]{"Smith", "Jones", "Taylor", "Brown", "Wilson", "Davies", "Evans", "Roberts"};
-        }else if (nombreClub.equals("Inter")){
-            nombres = new String[]{"Luca", "Matteo", "Marco", "Lorenzo", "Andrea", "Federico", "Nicolo", "Davide"};
-            apellidos = new String[]{"Rossi", "Romano", "Moretti", "Conti", "Ricci", "Marino", "Greco", "Gallo"};
-        }else{
-            nombres = new String[]{"Benjamin", "Vicente", "Matias", "Diego", "Joaquin", "Maximiliano", "Lucas", "Cristobal"};
-            apellidos = new String[]{"Gonzalez", "Muñoz", "Rojas", "Diaz", "Perez", "Soto", "Contreras", "Silva"};
-        }
-
-        Random aleatorio = new Random(nombreClub.hashCode() * 31L + dorsal + cicloMercado * 1009L);
-        int inicioNombre = aleatorio.nextInt(nombres.length);
-        int inicioApellido = aleatorio.nextInt(apellidos.length);
-        String nombre = null;
-        for (int intento = 0; intento < nombres.length * apellidos.length; intento++){
-            String candidato = nombres[(inicioNombre + intento) % nombres.length] + " "
-                    + apellidos[(inicioApellido + intento / nombres.length) % apellidos.length];
-            if (club.buscarJugadorNombre(candidato) == null && fichajes.buscarFutbolista(candidato) == null){
-                nombre = candidato;
-                break;
-            }
-        }
-        if (nombre == null){
-            throw new IllegalStateException("No se pudo generar un nombre de jugador disponible para " + nombreClub);
-        }
-
-        int rendimiento = 4 + aleatorio.nextInt(5);
-        double sueldo = rendimiento * 10000.0;
-        String posicion = posiciones[aleatorio.nextInt(posiciones.length)];
-        return new Futbolista(nombre, dorsal, posicion, rendimiento, sueldo);
-    }
-
     public void listarRivales(ListaClubes clubes){
         DefaultTableModel tabla = (DefaultTableModel) vista.getInformacionRivales().getTablaRivales().getModel();
         tabla.setRowCount(0);
@@ -998,10 +779,8 @@ public class ControladorMB {
         bw.write(fin.getNombre()+";"+fin.getPartidosRestantes()+";"+fin.isAsociado());
         bw.newLine();
         bw.write(String.valueOf(emp.getMoralidad()));
-        System.out.println(emp.getMoralidad());
         bw.newLine();
         bw.write(String.valueOf(emp.getPuntuacion()));
-        System.out.println(emp.getPuntuacion());
         bw.newLine();
         for (int i = 0; i<clubes.getClubes().size()-1; i++){
             bw.write(clubes.getClubes().get(i).getPartidosJugados()+";");        
@@ -1095,28 +874,3 @@ public class ControladorMB {
 
 
 
-
-
-/* 
-        Compra con receta:              [###########]
-        Compra sin receta:              [#####......]
-        Compra de fácil acceso:         [#######....]
-        Solicitud de fabricación:       [#########..]
-
-
-
-        Compra con receta:              [R][E][G][A][V]      
-        Compra sin receta:              [R][E][G]
-        Compra de fácil acceso:         [R][E][G][V]
-        Solicitud de fabricación:       [R][E][G][A]
-
-
-
-
-
-
-
-
-
-
-*/
