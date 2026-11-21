@@ -4,7 +4,6 @@
  */
 package controlador;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -225,7 +224,7 @@ public class ControladorMB {
                 }
             }
             
-            clubBase(club, nombreClub);
+            club.clubBase(club, nombreClub);
             club.opcionesFichaje(club, nombreClub, fichajes);
             clubes.crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
             emp.setNombre(nombreEmpresario);
@@ -316,7 +315,6 @@ public class ControladorMB {
         }
     }
     
-    
     public void crear(Empresario emp, Club club, ListaClubes clubes, ListaClubes clubesCopia, ListaPatrocinios patrocinios, ListaFichajes fichajes){
         
         String nombreEmpresario = vista.getPanelCreacion().getTxtNombreEmpresario().getText().trim();
@@ -338,76 +336,15 @@ public class ControladorMB {
         }
         club.setNombre(nombreClub);
         club.setDificultad(nombreClub);
-        clubBase(club, nombreClub);
+        club.clubBase(club, nombreClub);
         clubes.crearClubesYPatrocinios(clubes, clubesCopia, nombreClub, patrocinios);
         club.opcionesFichaje(club, nombreClub, fichajes);
         String[] nombreLiga = dificultad.split("\\(");
         agregarEvento("Creación", nombreEmpresario + " ahora es presidente de " + nombreClub
                 + " en la " + nombreLiga[0].trim() + ".");
-        //transicion exitosa
         gestionar(emp);
     }
-    
 
-    //a futuro, pasar esta funcion a Club.java
-    public void clubBase(Club club, String nombreClub){
-        club.getJugadores().clear();
-        String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
-
-        if (nombreClub.equals("Liverpool")){
-            f1Nombre = "Alison Becker";
-            f2Nombre = "Jeremy Jacquet";
-            f3Nombre = "Milos Kerkez";
-            f4Nombre = "Ronald Araujo";
-            f5Nombre = "Ryan Gravenberch";
-            f6Nombre = "Virgil Van Dijk";
-            f7Nombre = "Cody Gakpo";
-            f8Nombre = "Alexis Mac Allister";
-            f9Nombre = "Alexander Isak";
-        } else if(nombreClub.equals("Inter")){
-            f1Nombre = "Josep Martínez";
-            f2Nombre = "Benjamin Pavard";
-            f3Nombre = "Federico Dimarco";
-            f4Nombre = "Djed Spence";
-            f5Nombre = "Nicolo Barella";
-            f6Nombre = "Alessandro Bastoni";
-            f7Nombre = "Ange-Yoan Bonny";
-            f8Nombre = "Hakan Calhanoglu";
-            f9Nombre = "Lautaro Martinez";
-        }else{
-            f1Nombre = "Vozinha";
-            f2Nombre = "Jonathan Villagra";
-            f3Nombre = "Erick Wiemberg";
-            f4Nombre = "Joaquin Sosa";
-            f5Nombre = "Tomas Alarcon";
-            f6Nombre = "Arturo Vidal";
-            f7Nombre = "Lautaro Pastran";
-            f8Nombre = "Alvaro Madrid";
-            f9Nombre = "Joaquin Correa";
-        }
-
-
-        Futbolista f1 = new Futbolista(f1Nombre, 1, "Arquero", 5, 10000);
-        Futbolista f2 = new Futbolista(f2Nombre, 2, "Central derecho", 4, 10000);
-        Futbolista f3 = new Futbolista(f3Nombre, 3, "Lateral izquierdo", 3, 10000);
-        Futbolista f4 = new Futbolista(f4Nombre, 4, "Lateral derecho", 5, 10000);
-        Futbolista f5 = new Futbolista(f5Nombre, 5, "Mediocentro defensivo", 4, 10000);
-        Futbolista f6 = new Futbolista(f6Nombre, 6, "Central izquierdo", 2, 10000);
-        Futbolista f7 = new Futbolista(f7Nombre, 7, "Extremo derecho", 5, 10000);
-        Futbolista f8 = new Futbolista(f8Nombre, 8, "Volante", 4, 10000);
-        Futbolista f9 = new Futbolista(f9Nombre, 9, "Delantero", 5, 10000);
-        
-        club.agregarJugador(f1);
-        club.agregarJugador(f2);
-        club.agregarJugador(f3);
-        club.agregarJugador(f4);
-        club.agregarJugador(f5);
-        club.agregarJugador(f6);
-        club.agregarJugador(f7);
-        club.agregarJugador(f8);
-        club.agregarJugador(f9);
-
-    }
     
     public void gestionar(Empresario emp){
         revisarDerrota(emp);
@@ -427,16 +364,14 @@ public class ControladorMB {
     }
     
     public void simular(ListaPatrocinios patrocinios, ListaFichajes fichajes, Club club, ListaClubes clubes, ListaClubes clubesCopia, Empresario emp){
-        // si la puntuacion es menor o igual a 0 se bloquea la simulacion
         revisarDerrota(emp);
         revisarVictoria(club, emp);
-  
+
         Club rival;
         do{
             Random rivalRand = new Random();
             rival = clubesCopia.getClubes().get(rivalRand.nextInt(clubesCopia.getCantidad()));
         }while (rival.isEnfrentado());
-
         Random rand = new Random();
         String resultado;
         int diferenciaRendimiento, diferenciaGoles;
@@ -463,11 +398,9 @@ public class ControladorMB {
             resultado = "Empate: 0-0";
             agregarEvento("Simulación", club.getNombre() + " empató 0-0 con " + rival.getNombre());
         }
-
         rival.setPartidosJugados(rival.getPartidosJugados()+1);
         clubes.modificarRival(rival);
         clubesCopia.borrarClub(rival);
-
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelSimulacion().getTablaPartido().getModel();
         tabla.addRow(new Object[]{club.getPartidosJugados()+1, rival.getNombre(), resultado});
         vista.getPanelSimulacion().getLblPuntuacion().setText(String.valueOf(emp.getPuntuacion()));
@@ -559,7 +492,6 @@ public class ControladorMB {
         }
         vista.getPanelPatrocinios().getBtnElegirPatrocinador().addActionListener(e->{
             int fila = vista.getPanelPatrocinios().getTablaPatrocinadores().getSelectedRow();
-            //validacion para ver que se haya seleccionado una fila
             if(fila == -1){
                 vista.mostrarInformacion("Debe seleccionar un patrocinador de la lista","Patrocinios");
             }
@@ -626,7 +558,6 @@ public class ControladorMB {
         vista.mostrarPantalla("FICHAJE");
         listarFichajes(fichajes);
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelFichaje().getListaFichajes().getModel();
-        // limpia listeners anteriores
         for (java.awt.event.ActionListener al : vista.getPanelFichaje().getBtnFichar().getActionListeners()) {
         vista.getPanelFichaje().getBtnFichar().removeActionListener(al);
         }
@@ -654,15 +585,12 @@ public class ControladorMB {
             vista.mostrarInformacion("Ese jugador ya forma parte del club.", "Fichaje");
             return;
         }
-        //validacion dorsal duplicado
         for(Futbolista f : club.getJugadores()){
             if(f.getDorsal() == jugador.getDorsal()){
                 vista.mostrarError("El dorsal # "+ jugador.getDorsal()+"ya esta ocupado","Dorsal en uso" );
                 return;
             }
         }
-           
-        //validacion fondos insuficientes
         if(emp.getPuntuacion() < jugador.getSueldo()){
             vista.mostrarError("No tienes sufucientes fondos para incorporar a este jugador", "Fondos insuficientes");
             return;
@@ -671,13 +599,12 @@ public class ControladorMB {
         fichajes.borrarFutbolista(jugador);
         agregarEvento("Fichaje", club.getNombre() + " fichó a " + jugador.getNombre()
                 + ". Sueldo: " + jugador.getSueldo() + ", rendimiento: " + jugador.getRendimiento());
-        //borrado visual de la tabla
         tabla.removeRow(fila);
         revisarDerrota(emp);
         vista.mostrarInformacion("Jugador fichado con exito", "Fichaje exitoso");
         modificar(emp);
         
-        }); //FINAL LISTENER (INICIADO EN lÍNEA 342)
+        }); 
     }
 
     public void despedirJugador(){
@@ -827,7 +754,7 @@ public class ControladorMB {
         bw.close();
     }
 
-    private int leerMejorPuntuacion(int valorInicial){
+    public int leerMejorPuntuacion(int valorInicial){
         if (!Files.exists(ARCHIVO_MEJOR_PUNTUACION)){
             return valorInicial;
         }
@@ -841,7 +768,7 @@ public class ControladorMB {
         }
     }
 
-    private String limpiarCampoGuardado(String valor){
+    public String limpiarCampoGuardado(String valor){
         return valor.replace(';', ',').replace('\n', ' ').replace('\r', ' ');
     }
 
@@ -866,11 +793,4 @@ public class ControladorMB {
         DefaultTableModel tabla = (DefaultTableModel) vista.getPanelEventos().getTablaEventos().getModel();
         tabla.addRow(new Object[]{sesion.get(), limpiarCampoGuardado(tipoEvento), limpiarCampoGuardado(evento)});
     }
-
-
 }
-    
-
-
-
-

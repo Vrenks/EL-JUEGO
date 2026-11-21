@@ -184,6 +184,63 @@ public class Club {
         }
         return Math.min(suma, 70); // Limita el máximo a 70
     }
+
+        public void clubBase(Club club, String nombreClub){
+        club.getJugadores().clear();
+        String f1Nombre, f2Nombre, f3Nombre, f4Nombre, f5Nombre, f6Nombre, f7Nombre, f8Nombre, f9Nombre;
+
+        if (nombreClub.equals("Liverpool")){
+            f1Nombre = "Alison Becker";
+            f2Nombre = "Jeremy Jacquet";
+            f3Nombre = "Milos Kerkez";
+            f4Nombre = "Ronald Araujo";
+            f5Nombre = "Ryan Gravenberch";
+            f6Nombre = "Virgil Van Dijk";
+            f7Nombre = "Cody Gakpo";
+            f8Nombre = "Alexis Mac Allister";
+            f9Nombre = "Alexander Isak";
+        } else if(nombreClub.equals("Inter")){
+            f1Nombre = "Josep Martínez";
+            f2Nombre = "Benjamin Pavard";
+            f3Nombre = "Federico Dimarco";
+            f4Nombre = "Djed Spence";
+            f5Nombre = "Nicolo Barella";
+            f6Nombre = "Alessandro Bastoni";
+            f7Nombre = "Ange-Yoan Bonny";
+            f8Nombre = "Hakan Calhanoglu";
+            f9Nombre = "Lautaro Martinez";
+        }else{
+            f1Nombre = "Vozinha";
+            f2Nombre = "Jonathan Villagra";
+            f3Nombre = "Erick Wiemberg";
+            f4Nombre = "Joaquin Sosa";
+            f5Nombre = "Tomas Alarcon";
+            f6Nombre = "Arturo Vidal";
+            f7Nombre = "Lautaro Pastran";
+            f8Nombre = "Alvaro Madrid";
+            f9Nombre = "Joaquin Correa";
+        }
+        Futbolista f1 = new Futbolista(f1Nombre, 1, "Arquero", 5, 10000);
+        Futbolista f2 = new Futbolista(f2Nombre, 2, "Central derecho", 4, 10000);
+        Futbolista f3 = new Futbolista(f3Nombre, 3, "Lateral izquierdo", 3, 10000);
+        Futbolista f4 = new Futbolista(f4Nombre, 4, "Lateral derecho", 5, 10000);
+        Futbolista f5 = new Futbolista(f5Nombre, 5, "Mediocentro defensivo", 4, 10000);
+        Futbolista f6 = new Futbolista(f6Nombre, 6, "Central izquierdo", 2, 10000);
+        Futbolista f7 = new Futbolista(f7Nombre, 7, "Extremo derecho", 5, 10000);
+        Futbolista f8 = new Futbolista(f8Nombre, 8, "Volante", 4, 10000);
+        Futbolista f9 = new Futbolista(f9Nombre, 9, "Delantero", 5, 10000);
+        
+        club.agregarJugador(f1);
+        club.agregarJugador(f2);
+        club.agregarJugador(f3);
+        club.agregarJugador(f4);
+        club.agregarJugador(f5);
+        club.agregarJugador(f6);
+        club.agregarJugador(f7);
+        club.agregarJugador(f8);
+        club.agregarJugador(f9);
+
+    }
     
     public void ventasRendimiento(int diferenciaGoles, Club club, Empresario emp){
         int camisetas = diferenciaGoles*300;
